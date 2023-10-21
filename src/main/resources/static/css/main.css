@@ -1,0 +1,345 @@
+/***********************************
+ GENERAL
+************************************/
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+}
+
+/***********************************
+ HEADER
+************************************/
+
+header {
+    width: 100%;
+    background: #007BFF;
+    position: relative;
+    color: white;
+    padding-left: 10px;
+    padding-right: 20px;
+    padding-top: 25px;
+    padding-bottom: 10px;
+}
+
+h1 {
+    font-size: 40px;
+    color: #fcfcfc;
+    line-height: 0.1; /* Adjust the line height */
+}
+
+h2 {
+    font-size: 20px;
+    line-height: 1; /* Adjust the line height */
+}
+
+.bolt-icon {
+    fill: #FFC107; /* This will make the SVG the color you choose, as an example */
+    width: 15px; /* You can specify any width you want */
+    height: auto; /* This will maintain the aspect ratio of the SVG */
+
+}
+
+
+.site-branding {
+    display: flex;
+    flex-direction: column;
+    align-items: start; /* Align the items to the start of the container */
+    float: left;
+
+}
+
+.branding-container {
+    display: flex;
+    flex-direction: column; /* Make items appear vertically */
+    gap: 0; /* Remove any gaps */
+    align-items: center;
+}
+
+h1, h2 {
+    margin: 0; /* Remove margins */
+    padding: 0; /* Remove paddings */
+}
+
+.site-title {
+    display: flex; /* This makes the container use flexbox */
+    align-items: center; /* This will vertically center the text and the icon */
+    gap: 8px; /* This will create a small gap between the text and the icon */
+}
+
+.site-title :hover {
+    color: #FFC107; /* You can choose any color for the hover effect */
+}
+
+.bolt-icon,
+.search-icon,
+.user-icon {
+
+    height: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Align SVGs with the text */
+    margin-right: 8px; /* Space between icon and text if they're side by side */
+}
+
+.header-actions {
+    display: flex;
+    align-items: center; /* This ensures everything is aligned vertically */
+    position: absolute; /* Use absolute positioning */
+    top: 10px; /* Adjust these values to position the container */
+    right: 20px; /* Adjust these values to position the container */
+    gap: 12px; /* Creates spacing between the icons and the Log In link */
+}
+
+/* Additional CSS for the Log In link for aesthetics */
+.header-actions a {
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+
+.separator {
+    height: 20px; /* Adjust the height as per your requirements */
+    width: 1px; /* This makes it a thin line */
+    background-color: #ffffff; /* Color of the separator, adjust if needed */
+    margin-left: 12px; /* Spacing to the left of the separator */
+    margin-right: 12px; /* Spacing to the right of the separator */
+}
+
+.search-icon {
+    width: 22px; /* Adjust width based on design preference */
+    fill: #ffffff; /* This will make the SVG the color you choose, as an example */
+}
+.search-icon :hover {
+    fill: #FFC107; /* You can choose any color for the hover effect */
+}
+
+.user-icon {
+    width: 18px; /* Adjust width based on design preference */
+    fill: #ffffff; /* This will make the SVG the color you choose, as an example */
+
+}
+
+
+a {
+    float: right;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/***********************************
+ NAVIGATION
+************************************/
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    background-color: #007BFF;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);*/
+    flex-direction: row-reverse;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap; /* Prevent the list items from wrapping */
+}
+
+nav li {
+    position: relative;
+}
+
+nav a {
+    padding: 10px 15px;
+    border-radius: 5px;
+    white-space: nowrap; /* Prevent the text inside anchor tags from wrapping */
+}
+
+/* Override Bootstrap styles for the links in the nav */
+nav ul li a {
+    color: inherit; /* This will use the color you've set for your links */
+    text-decoration: none; /* This removes the underline */
+    transition: color 0.3s; /* Optional: for a smooth color transition */
+}
+
+/* Change color on hover for better UX */
+nav ul li a:hover {
+    color: #FFC107; /* You can choose any color for the hover effect */
+}
+
+/* Overrides for site-title */
+.branding-container a {
+    text-decoration: none;  /* remove underline */
+    color: white;  /* set color to white */
+}
+
+.site-title a:hover {
+    color: #FFC107;  /* or whatever hover color you desire */
+}
+
+/* Overrides for header-actions user-account */
+.header-actions a {
+    text-decoration: none;  /* remove underline */
+    color: white;  /* set color to white */
+}
+
+.header-actions a:hover {
+    color: #FFC107;  /* or whatever hover color you desire */
+}
+/***********************************
+ MAIN CONTENT
+************************************/
+
+.recent-recipes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* This will create 3 equal-width columns */
+    gap: 20px; /* This will create a 20px gap between the grid items, adjust as needed */
+    padding: 20px; /* Optional padding for the container */
+}
+
+.recipe-card img {
+    width: 100%; /* You can also use a fixed width like 200px if preferred */
+    height: 150px; /* Adjust height as needed */
+    object-fit: cover; /* This will make sure the images cover the area without distortion */
+    border-radius: 5px; /* Optional: to give the images rounded corners */
+}
+
+.recipe-card .recipe-image-wrapper {
+    position: relative; /* Ensure it's relative so the SVG is positioned relative to this container */
+}
+
+.Fave-icon {
+    position: absolute;
+    top: 5px; /* Position to the top */
+    right: 5px; /* Position to the right */
+    z-index: 1; /* Optional: Ensure the icon stays above the image */
+    width: 30px;
+    height: auto;
+}
+
+.recipe-card h3,
+.recipe-card .star-ratings {
+    margin: 0;
+    white-space: nowrap; /* Prevent wrapping onto the next line */
+}
+
+.recipe-card h3 {
+    white-space: nowrap;
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Display an ellipsis when overflow */
+    max-width: 80%; /* or any value you prefer */
+    display: inline-block; /* ensure text-overflow works */
+}
+
+.recipe-card .star-ratings {
+    white-space: nowrap;
+}
+
+
+.recipe-card h3 {
+    margin-top: 15px;
+
+}
+
+.recipe-card {
+    transition: all 0.3s ease; /* Smoothens the visual changes */
+    cursor: pointer; /* Changes the cursor to a hand icon to indicate clickability */
+    border-radius: 5px; /* Optional: adds rounded corners */
+    padding: 10px;
+}
+
+.recipe-card:hover {
+    background-color:  rgba(255, 255, 255, 0.1); /* Adds a very light grey background on hover */
+    box-shadow: 0 4px 12px #FFC107; /* Adds a subtle shadow on hover */
+}
+
+/***********************************
+ Mobile Responsive Design
+************************************/
+
+@media (max-width: 768px) {
+    /* Adjustments for header and its elements */
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .site-branding {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px; /* Gives some spacing between branding and header actions */
+    }
+
+    .branding-container {
+        flex-direction: column; /* Make items appear vertically */
+        gap: 10px; /* Provides some spacing between the site title and h2 */
+    }
+
+    .site-title {
+        gap: 5px; /* Reduces the gap between the text and icon a little for mobile */
+    }
+
+    .header-actions {
+        position: static; /* Override absolute positioning */
+        flex-direction: column; /* Stack items vertically */
+        gap: 10px; /* Provides spacing between search icon and user icon */
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .header-actions a {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* space between user icon and "Log In" text */
+    }
+
+    .separator {
+        height: 1px; /* Adjust the height as per your requirements */
+        width: 100px; /* This makes it a thin line */
+        background-color: #ffffff; /* Color of the separator, adjust if needed */
+        margin-left: 12px; /* Spacing to the left of the separator */
+        margin-right: 12px; /* Spacing to the right of the separator */
+        align-self: center; /* Center the separator */
+    }
+
+
+    nav {
+        justify-content: center;
+        height: auto;
+        flex-direction: column; /* Stack the navigation elements vertically */
+        gap: 10px; /* Provides spacing between navigation elements */
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+    nav ul {
+        /* Stack the items vertically */
+        flex-wrap: wrap;
+    }
+
+    /* Adjustments for the main content */
+    .recent-recipes {
+        grid-template-columns: 1fr; /* Only 1 card per row for better visibility */
+        gap: 20px; /* Adjusted spacing between the cards */
+    }
+
+    .recipe-card h3 {
+        max-width: 90%; /* A bit more room for titles */
+    }
+}
+

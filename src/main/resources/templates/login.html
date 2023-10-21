@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
+    <link href="../static/css/login.css" th:href="@{/css/login.css}" rel="stylesheet" />
+    <link href="../static/css/normalize.css" th:href="@{/css/normalize.css}" rel="stylesheet" />
+    <title>Login Page</title>
+</head>
+
+<body>
+<div class="box-container">
+
+    <div class="background-image"></div>
+    <div class="login-box">
+        <div class="login-header">
+            <a href="index.html" th:href="@{/index.html}" class="branding-link">
+                <h1 class="brand-name">ThunderTaste</h1>
+                <div class="brand-icon">
+                    <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36" xmlns="http://www.w3.org/2000/svg">
+                        <use href="../static/images/icons/icons.svg#bolt-icon" th:href="@{/images/icons/icons.svg#bolt-icon}"></use>
+                    </svg>
+                </div>
+            </a>
+        </div>
+        <!-- Email Input -->
+        <div class="input-box">
+            <input type="email" class="input-field" placeholder="Email" name="username">
+        </div>
+        <!-- Password Input -->
+        <div class="input-box">
+            <input type="password" class="input-field" placeholder="Password" name="password">
+        </div>
+        <!-- Login Button -->
+        <div class="login-button">
+            <button type="submit" class="button-label">Login</button>
+        </div>
+        <!-- Link to Forgot Password -->
+        <a href="forgotPassword.html" th:href="@{/forgotPassword.html}" class="forgot-password">Forgot password?</a>
+    </div>
+    <div class="signup-box">
+        <div class="signup-background"></div>
+        <p class="signup-text">Don't have an account?</p>
+        <a href="signup.html" th:href="@{/signup}" class="signup-link">Sign up</a>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link href="../static/css/signup.css" th:href="@{/css/signup.css}" rel="stylesheet">
+    <link href="../static/css/normalize.css" th:href="@{/css/normalize.css}" rel="stylesheet">
+    <script src="../static/js/signup.js" th:src="@{/js/signup.js}" defer></script>
+    <title>Sign Up Page</title>
+</head>
+
+<body>
+<div class="box-container">
+    <div class="background-image"></div>
+    <div class="signup-box">
+        <div class="login-header">
+            <a href="index.html" th:href="@{/index.html}" class="branding-link">
+                <h1 class="brand-name">ThunderTaste</h1>
+                <div class="brand-icon">
+                    <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36" xmlns="http://www.w3.org/2000/svg">
+                        <use href="../static/images/icons/icons.svg#bolt-icon" th:href="@{/images/icons/icons.svg#bolt-icon}"></use>
+                    </svg>
+                </div>
+            </a>
+            <h2 class="join-info">Sign up to save recipes and Share them with your friends.</h2>
+        </div>
+
+        <!-- Your form method and action might need to be adjusted based on your backend implementation -->
+        <form id="signupForm" th:action="@{/signup}" method="post">
+            <div class="input-box">
+                <input type="email" id="email" class="input-field" placeholder="Email">
+                <div class="error-message" id="emailError"></div>
+            </div>
+            <div class="input-box">
+                <input type="text" id="username" class="input-field" placeholder="Username">
+                <div class="error-message" id="usernameError"></div>
+            </div>
+            <div class="input-box password-input-container">
+                <input type="password" id="password" class="input-field" placeholder="Password">
+                <button type="button" id="togglePassword1" class="toggle-password-button">SHOW</button>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            <div class="input-box password-input-container">
+                <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm Password">
+                <button type="button" id="togglePassword" class="toggle-password-button">SHOW</button>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+            <div class="signup-button">
+                <button type="submit" class="button-label">Join Now</button>
+            </div>
+
+        </form>
+        <div class="already-have-account-container">
+            <a href="login.html" th:href="@{/login.html}" class="already-have-account">Already have an account? Login</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

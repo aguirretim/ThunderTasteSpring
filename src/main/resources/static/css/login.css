@@ -1,0 +1,219 @@
+/***********************************
+ GENERAL
+************************************/
+body {
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+}
+
+
+/***********************************
+ BACKGROUND
+************************************/
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../images/loginBackground.png") no-repeat center;
+    background-size: cover;
+    z-index: -1;
+}
+
+/***********************************
+ BOXES
+************************************/
+
+
+.login-box,
+.signup-box {
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(0, 0, 0, 1);
+    margin: 5px 0;  /* Only adding margin to top and bottom */
+    z-index: 1;}
+
+.login-box {
+    /* Adding Flexbox to center everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontally centering everything */
+    justify-content: center;
+    gap: 20px;
+    width: 540px;
+    height: 540px;
+
+}
+
+.signup-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 540px;
+    height: 100px;
+    gap: 8px;
+    align-items: center;
+    font-size: 25px;
+
+}
+
+.box-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;  /* to make sure nothing goes outside the container */
+}
+
+/***********************************
+ INPUT
+************************************/
+.input-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 80%; /* Changed to 80% for fluidity */
+    max-width: 540px; /* Maximum width it can reach */
+    height: auto;
+    padding: 0px; /* Adding padding to avoid items touching the borders */
+
+}
+.input-field {
+    width: 80%; /* Ensure the input field takes the full width of its container */
+    box-sizing: border-box; /* Ensure padding and border are included in total width/height */
+    padding: 10px 15px; /* Add some padding for visual comfort */
+}
+
+.input-background {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(217, 217, 217, 1);
+}
+
+.input-label {
+    position: absolute;
+    font-size: 40px;
+    left: 23px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(128, 128, 128, 1);
+}
+.input-box,
+.login-button {
+    width: 90%; /* Making it take up 90% of its container's width */
+    max-width: 497px;
+    display: flex;
+    justify-content: center;
+}
+/***********************************
+ LOGIN HEADER
+************************************/
+
+
+
+
+.login-header {
+    /* Setting a full width to the header to help position it above everything else */
+    width: 100%;
+    height: 110px;
+    display: flex; /* This ensures that the brand name and icon are side by side */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+}
+
+.brand-name {
+    font-size: 40px;
+    color: rgba(0, 0, 0, 1);
+    margin-right: 8px; /* Spacing between text and icon */
+    position: relative; /* Remove absolute positioning */
+}
+
+.brand-icon {
+    position: relative;
+   }
+
+.bolt-icon
+{
+    vertical-align: middle; /* Align SVGs with the text */
+    fill: #FFC107; /* This will make the SVG the color you choose, as an example */
+    width: 25px; /* You can specify any width you want */
+    height: auto; /* This will maintain the aspect ratio of the SVG */
+}
+
+/***********************************
+ BUTTON
+************************************/
+.login-button {
+    width: 80%; /* Adjust this value according to your preference */
+    max-width: 540px; /* This is the maximum width, which is the same as the width of the login box */
+    height: 110px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+}
+
+.button-label {
+    width: 100%; /* or whatever width you prefer */
+    height: 50px; /* adjust height if needed */
+    font-size: 30px;
+    display: flex;
+    align-items: center; /* vertically centers the text */
+    justify-content: center; /* horizontally centers the text */
+    border: none; /* remove default border */
+    background-color: rgba(217, 217, 217, 1); /* or whatever color you prefer */
+    color: rgba(0, 0, 0, 1);
+    cursor: pointer; /* to show it's clickable */
+    border-radius: 5px; /* if you want rounded corners */
+    transition: background-color 0.3s; /* smooth transition for hover effect */
+}
+
+/* Optional: Change button background color on hover for better UX */
+.button-label:hover {
+    background-color: rgba(200, 200, 200, 1);
+}
+
+.button-background {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(217, 217, 217, 1);
+}
+
+.button-label {
+    position: absolute;
+    font-size: 40px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(0, 0, 0, 1);
+}
+
+
+
+/***********************************
+ FORGOT PASSWORD
+************************************/
+
+.forgot-password {
+    /* ... Your existing styles ... */
+    font-size: 25px;
+    text-align: center; /* Centering the text */
+    margin-top: 15px; /* Space it out from the button a bit */
+}
+
+.branding-link {
+    display: flex; /* makes the link and its children act as a flexible container */
+    align-items: center; /* vertically centers the children */
+    text-decoration: none; /* removes the default underline from the link */
+    color: inherit; /* ensures the link inherits its parent's text color */
+    width: 100%; /* ensures the link takes up the full width of its container */
+    height: 100%; /* ensures the link takes up the full height of its container */
+    justify-content: center; /* horizontally center the content */
+}
+

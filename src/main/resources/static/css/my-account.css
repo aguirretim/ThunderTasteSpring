@@ -1,0 +1,255 @@
+/***********************************
+ GENERAL
+************************************/
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/***********************************
+ HEADER
+************************************/
+
+header {
+    width: 100%;
+    background: #007BFF;
+    position: relative;
+    color: white;
+    padding-left: 10px;
+    padding-right: 20px;
+    padding-top: 25px;
+    padding-bottom: 10px;
+}
+
+h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 40px;
+    color: #fcfcfc;
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    color: #fcfcfc;
+}
+
+
+
+.site-branding {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    float: left;
+}
+
+.branding-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+}
+/* Overrides for site-title */
+.branding-container a {
+    text-decoration: none;  /* remove underline */
+    color: white;  /* set color to white */
+}
+.site-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.site-title :hover {
+    color: #FFC107;
+}
+
+.bolt-icon {
+    fill: #FFC107; /* This will make the SVG the color you choose, as an example */
+    width: 15px; /* You can specify any width you want */
+    height: auto; /* This will maintain the aspect ratio of the SVG */
+
+}
+.bolt-icon,
+.search-icon,
+.user-icon {
+    height: auto;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.search-icon :hover {
+    fill: #FFC107; /* You can choose any color for the hover effect */
+}
+.header-actions {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    gap: 12px;
+}
+
+.header-actions a {
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+}
+
+.header-actions a:hover {
+    color: #FFC107;
+}
+
+.separator {
+    height: 20px;
+    width: 1px;
+    background-color: #ffffff;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.search-icon,
+.user-icon {
+    fill: #ffffff;
+}
+
+.search-icon {
+    width: 22px;
+}
+
+.user-icon {
+    width: 18px;
+}
+
+a {
+    float: right;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/***********************************
+ NAVIGATION
+************************************/
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    background-color: #007BFF;
+    flex-direction: row-reverse;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+nav li {
+    position: relative;
+}
+
+nav a {
+    padding: 10px 15px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+nav ul li a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #FFC107;
+}
+/***********************************
+ MAIN CONTENT
+************************************/
+.profile-photo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.text-muted {
+    display: block;
+}
+.btn-secondary {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #aaa;
+    color: #fff;
+}
+
+#charCounter.alert {
+    color: red;
+}
+
+/***********************************
+ Mobile Responsive Design
+************************************/
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .site-branding {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .branding-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .site-title {
+        gap: 5px;
+    }
+
+    .header-actions {
+        position: static;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .header-actions a {
+        padding: 5px 8px;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
