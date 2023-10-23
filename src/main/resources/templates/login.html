@@ -16,7 +16,7 @@
     <div class="background-image"></div>
     <div class="login-box">
         <div class="login-header">
-            <a href="index.html" th:href="@{/index.html}" class="branding-link">
+            <a href="index.html" th:href="@{/index}" class="branding-link">
                 <h1 class="brand-name">ThunderTaste</h1>
                 <div class="brand-icon">
                     <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36" xmlns="http://www.w3.org/2000/svg">
@@ -25,26 +25,34 @@
                 </div>
             </a>
         </div>
-        <!-- Email Input -->
-        <div class="input-box">
-            <input type="email" class="input-field" placeholder="Email" name="username">
-        </div>
-        <!-- Password Input -->
-        <div class="input-box">
-            <input type="password" class="input-field" placeholder="Password" name="password">
-        </div>
-        <!-- Login Button -->
-        <div class="login-button">
-            <button type="submit" class="button-label">Login</button>
-        </div>
+
+        <form th:action="@{/login}" method="post">
+            <!-- Email Input -->
+            <div class="input-box">
+                <input type="email" class="input-field" placeholder="Email" name="username">
+            </div>
+            <!-- Password Input -->
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Password" name="password">
+            </div>
+            <!-- CSRF Token (Important for security) -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <!-- Login Button -->
+            <div class="login-button">
+                <button type="submit" class="button-label">Login</button>
+            </div>
+        </form>
+        <div th:if="${errorMessage}" th:text="${errorMessage}" class="error-message"></div>
         <!-- Link to Forgot Password -->
-        <a href="forgotPassword.html" th:href="@{/forgotPassword.html}" class="forgot-password">Forgot password?</a>
+        <a href="forgotPassword.html" th:href="@{/forgotPassword}" class="forgot-password">Forgot password?</a>
     </div>
+
     <div class="signup-box">
         <div class="signup-background"></div>
         <p class="signup-text">Don't have an account?</p>
         <a href="signup.html" th:href="@{/signup}" class="signup-link">Sign up</a>
     </div>
+
 </div>
 
 </body>

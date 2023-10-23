@@ -1,8 +1,5 @@
 package com.thundertaste.recipesite.user;
 
-
-
-
 import jakarta.persistence.*;
 import java.util.Date;
 

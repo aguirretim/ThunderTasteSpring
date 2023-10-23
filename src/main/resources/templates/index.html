@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"  lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -35,19 +35,29 @@
             </svg>
         </a>
         <div class="separator"></div>
-        <a href="login.html" th:href="@{/login.html}">
-            <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="../static/images/icons/icons.svg#user-icon" th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
-            </svg>
-            Log In
-        </a>
+        <div th:if="${#authentication.principal == 'anonymousUser'}"> <!-- User is NOT authenticated -->
+            <a href="login.html" th:href="@{/login.html}">
+                <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="../static/images/icons/icons.svg#user-icon" th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
+                </svg>
+                Log In
+            </a>
+        </div>
+        <div th:if="${#authentication.principal != 'anonymousUser'}"> <!-- User IS authenticated -->
+            <a href="my-account.html" th:href="@{/my-account}">
+                <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="../static/images/icons/icons.svg#user-icon" th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
+                </svg>
+                My Account
+            </a>
+        </div>
     </div>
 
     <nav>
         <ul>
-            <li><a href="recipe-search.html" th:href="@{/recipe-search.html}">Browse Recipes</a></li>
-            <li><a href="my-recipes.html" th:href="@{/my-recipes.html}">My Recipes</a></li>
-            <li><a href="submit-recipe.html" th:href="@{/submit-recipe.html}">Submit a Recipe</a></li>
+            <li><a href="recipe-search.html" th:href="@{/recipe-search}">Browse Recipes</a></li>
+            <li><a href="my-recipes.html" th:href="@{/my-recipes}">My Recipes</a></li>
+            <li><a href="submit-recipe.html" th:href="@{/submit-recipe}">Submit a Recipe</a></li>
         </ul>
     </nav>
 

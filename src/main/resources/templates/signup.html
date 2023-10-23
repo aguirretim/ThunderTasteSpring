@@ -28,17 +28,17 @@
         </div>
 
         <!-- Your form method and action might need to be adjusted based on your backend implementation -->
-        <form id="signupForm" th:action="@{/signup}" method="post">
+        <form id="signupForm" th:action="@{/signup}" method="post" th:object="${user}">
             <div class="input-box">
-                <input type="email" id="email" class="input-field" placeholder="Email">
+                <input type="email" id="email" class="input-field" placeholder="Email" th:field="*{email}">
                 <div class="error-message" id="emailError"></div>
             </div>
             <div class="input-box">
-                <input type="text" id="username" class="input-field" placeholder="Username">
+                <input type="text" id="username" class="input-field" placeholder="Username" th:field="*{username}">
                 <div class="error-message" id="usernameError"></div>
             </div>
             <div class="input-box password-input-container">
-                <input type="password" id="password" class="input-field" placeholder="Password">
+                <input type="password" id="password" class="input-field" placeholder="Password" th:field="*{passwordHash}">
                 <button type="button" id="togglePassword1" class="toggle-password-button">SHOW</button>
                 <div class="error-message" id="passwordError"></div>
             </div>
@@ -50,7 +50,6 @@
             <div class="signup-button">
                 <button type="submit" class="button-label">Join Now</button>
             </div>
-
         </form>
         <div class="already-have-account-container">
             <a href="login.html" th:href="@{/login.html}" class="already-have-account">Already have an account? Login</a>
