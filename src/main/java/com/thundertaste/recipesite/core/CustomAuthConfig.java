@@ -46,7 +46,8 @@ public class CustomAuthConfig {
                                 new AntPathRequestMatcher("/recipe-search"),
                                 new AntPathRequestMatcher("/recipe-view"),
                                 new AntPathRequestMatcher("/signup"),
-                                new AntPathRequestMatcher("/submit-recipe")
+                                new AntPathRequestMatcher("/submit-recipe"),
+                                new AntPathRequestMatcher("/home")
                         ).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/index")).hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()

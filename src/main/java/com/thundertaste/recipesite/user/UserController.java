@@ -2,17 +2,24 @@ package com.thundertaste.recipesite.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/users")
+@Controller
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -34,7 +41,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("/allusers")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -81,6 +88,37 @@ public class UserController {
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/my-account")
+    public String viewProfile(Model model) {
+        // Get logged-in username
+        String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Fetch user details from the database
+        User user = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Add user details to the model
+        model.addAttribute("user", user);
+
+        return "my-account";
+
+    }
+
+    @PostMapping("/update-profile")
+    public String updateUserProfile(@RequestParam("bio") String bio, Principal principal, Model model) {
+        Optional<User> userOptional = userRepository.findByUsername(principal.getName());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setBio(bio);
+            userRepository.save(user);
+            model.addAttribute("user", user);
+            model.addAttribute("profileUpdated", true);
+        } else {
+            model.addAttribute("errorMessage", "User not found");
+        }
+        return "my-account";
     }
 
 }

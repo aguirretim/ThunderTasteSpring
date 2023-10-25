@@ -185,6 +185,9 @@ nav ul li a:hover {
     flex-direction: column;
     align-items: center;
 }
+
+
+
 .text-muted {
     display: block;
 }
@@ -198,10 +201,20 @@ nav ul li a:hover {
     background-color: #aaa;
     color: #fff;
 }
+.button-group {
+    text-align: right; /* Aligns the buttons to the right */
+}
 
 #charCounter.alert {
     color: red;
 }
+
+/* 1. Ensure modal stays on top */
+.modal {
+    z-index: 2000; /* high value to ensure it's on top of other elements */
+}
+
+
 
 /***********************************
  Mobile Responsive Design
