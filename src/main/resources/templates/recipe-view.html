@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-    <link href="css/recipe-view.css" rel="stylesheet">
-    <link href="./css/normalize.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Inter&amp;display=swap" rel="stylesheet">
+    <link href="../static/css/recipe-view.css" rel="stylesheet" th:href="@{/css/recipe-view.css}">
+    <link href="../static/css/normalize.css" rel="stylesheet" th:href="@{/css/normalize.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../static/js/recipe-view.js" th:src="@{/js/recipe-view.js}" defer></script>
 
     <title>ThunderTaste Recipes</title>
 </head>
@@ -18,11 +19,13 @@
         <div class="branding-container">
             <a href="index.html"> <div class="site-title">
                 <h1>ThunderTaste</h1>
-                <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36" xmlns="http://www.w3.org/2000/svg">
-                    <use xlink:href="images/icons/icons.svg#bolt-icon"></use>
+                <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <use href="../static/images/icons/icons.svg#bolt-icon"
+                         th:href="@{/images/icons/icons.svg#bolt-icon}"></use>
                 </svg>
-            </div></a >
-            <h2>Stormy Sirloin Recipe</h2>
+            </div></a>
+            <h2 th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
         </div>
 
 
@@ -30,23 +33,36 @@
 
     <div class="header-actions">
         <a href="#">
-            <svg class="search-icon" viewBox="0 0 45 39" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#search-icon"></use>
+            <svg class="search-icon" viewbox="0 0 45 39" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="../static/images/icons/icons.svg#search-icon" th:href="@{/images/icons/icons.svg#search-icon}"></use>
             </svg>
         </a>
         <div class="separator"></div>
-        <a href="login.html">
-            <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#user-icon"></use>
-            </svg>
-            Log In</a>
+        <div th:if="${#authentication.principal == 'anonymousUser'}"> <!-- User is NOT authenticated -->
+            <a href="login.html" th:href="@{/login.html}">
+                <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="../static/images/icons/icons.svg#user-icon"
+                         th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
+                </svg>
+                Log In
+            </a>
+        </div>
+        <div th:if="${#authentication.principal != 'anonymousUser'}"> <!-- User IS authenticated -->
+            <a href="my-account.html" th:href="@{/my-account}">
+                <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="../static/images/icons/icons.svg#user-icon"
+                         th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
+                </svg>
+                My Account
+            </a>
+        </div>
     </div>
 
     <nav>
         <ul>
-            <li><a href="recipe-search.html">Browse Recipes</a></li>
-            <li><a href="my-recipes.html">My Recipes</a></li>
-            <li><a href="submit-recipe.html">Submit a Recipe</a></li>
+            <li><a href="recipe-search.html" th:href="@{/recipe-search}">Browse Recipes</a></li>
+            <li><a href="my-recipes.html" th:href="@{/my-recipes}">My Recipes</a></li>
+            <li><a href="submit-recipe.html" th:href="@{/submit-recipe}">Submit a Recipe</a></li>
         </ul>
     </nav>
 
@@ -54,64 +70,76 @@
 </header>
 
 <main class="container mt-5 position-relative">
-    <h2 class="text-left">Stormy Sirloin Recipe</h2>
+    <h2 class="text-left"th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
     <div class="star-ratings">
-        <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-            <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-        </svg>
-        <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-            <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-        </svg>
-        <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-            <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-        </svg>
-        <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-            <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-        </svg>
-        <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-            <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-        </svg>
+        <th:block th:each="star : ${#numbers.sequence(1, 5)}">
+            <!--th:classappend="${star <= recipe.rating} ? 'rated' : 'unrated'" -->
+            <svg height="24" viewBox="0 0 27 24" width="27"
+                 xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="../static/images/icons/icons.svg#star-empty-icon" th:href="@{/images/icons/icons.svg#star-empty}"></use>
+                <!-- Insert additional SVG code here if needed -->
+                <!--th:xlink:href="@{images/icons/icons.svg#star-(star <= recipe .rating) ? 'full' : 'empty'}-icon"-->
+            </svg>
+        </th:block>
     </div>
-    <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-        <use xlink:href="images/icons/icons.svg#fave-icon"></use>
+    <svg class="Fave-icon" height="43" viewbox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
+        <use xlink:href="../static/images/icons/icons.svg#fave-icon"></use>
     </svg>
 
-    <p class="lead text-left mt-3 mb-4">Charged with a bolt of flavor, this sirloin steak recipe is electrified by a thunderous garlicky butter. Each bite delivers a lightning strike of melt-in-your-mouth delight. In the realm of steaks, others barely cause a ripple compared to this tempestuous treat. When indulging in steak, don't dim the luminance of taste just to save a few calories.</p>
+    <p class="lead text-left mt-3 mb-4" th:text="${recipeDescription}">Default description here</p>
     <div class="image-crop-container">
-        <img alt="Stormy Sirloin Image" src="images/v3_31.png" id="croppedImage">
+        <img alt="Default Alt Text" th:alt="${recipe.getTitle()}" src="images/v3_31.png" th:src="@{images/${recipe.image}}" id="croppedImage">
 
         <!-- Modal -->
         <div class="modal" id="imageModal">
             <div class="modal-inner">
                 <button type="button" class="close btn btn-secondary btn-lg rounded-circle" onclick="closeModal()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">×</span>
                 </button>
                 <img class="modal-content" id="modalImage" alt="" src="">
             </div>
         </div>
     </div>
+    <!-- Recipe Information Section -->
+    <section class="recipe-info">
+        <h3>Recipe Details</h3>
+        <div class="recipe-stats">
+            <div class="recipe-stat">
+                <span class="stat-label">Prep Time:</span>
+                <span class="stat-value" th:text="${recipe.prepTime}" >10 mins</span>
+            </div>
+            <div class="recipe-stat">
+                <span class="stat-label">Cook Time:</span>
+                <span class="stat-value" th:text="${recipe.cookTime}">8 mins</span>
+            </div>
+            <div class="recipe-stat">
+                <span class="stat-label">Total Time:</span>
+                <span class="stat-value" th:text="${recipe.totalTimeInMinutes} + ' mins'">18 mins</span>
+            </div>
+            <div class="recipe-stat">
+                <span class="stat-label">Servings:</span>
+                <span class="stat-value" th:text="${recipe.servingSize}">4</span>
+            </div>
+        </div>
+    </section>
 
     <!-- Recipe Details -->
     <section class="mt-2 mb-3">
         <h3>Ingredients</h3>
-        <ul>
-            <li>½ cup butter</li>
-            <li>4 cloves garlic, minced</li>
-            <li>2 teaspoons garlic powder</li>
-            <li>4 pounds beef top sirloin steaks</li>
-            <li>Salt and pepper to taste</li>
+        <ul th:if="${recipe.ingredients != null}">
+            <li th:each="ingredient : ${#strings.arraySplit(recipe.ingredients, ',')}">
+                <span th:text="${ingredient}">Ingredient</span>
+            </li>
         </ul>
         <h3>Directions</h3>
-        <ol>
-            <li>Preheat an outdoor grill for high heat and lightly oil the grate.</li>
-            <li>Melt butter in a small saucepan over medium-low heat; stir in minced garlic and garlic powder. Set aside.</li>
-            <li>Season both sides of each steak with salt and pepper.</li>
-            <li>Place steaks on preheated grill and cook 4 to 5 minutes per side. An instant-read thermometer inserted into the center should read 140 degrees F (60 degrees C) for medium doneness.</li>
-            <li>Transfer steaks to warmed plates; brush the tops liberally with garlic butter and allow to rest for 2 to 3 minutes before serving.</li>
+        <ol th:if="${recipe.steps != null}">
+            <li th:each="step : ${#strings.arraySplit(recipe.steps, '.')}">
+                <span th:text="${step}">Step</span>
+            </li>
         </ol>
         <hr>
     </section>
-    <P> Share your thoughts with other ThunderChefs</p>
+    <p> Share your thoughts with other ThunderChefs</p>
     <button type="submit" class="btn btn-primary mb-2 mr-2" onclick="navigateToReviewPage();">Write a ThunderChef Review</button>
     <!-- Reviews -->
     <section>
@@ -122,20 +150,25 @@
                 <p><strong>CookingWithThor2424</strong> - 07/21/2023</p>
                 <!-- You can add a star rating system here -->
                 <div class="star-ratings">
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
+                    <svg height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
                     </svg>
                 </div>
             </div>
@@ -146,58 +179,38 @@
                 <p><strong>ZeusBoyardee556</strong> - 05/21/2023</p>
                 <!-- You can add a star rating system here -->
                 <div class="star-ratings">
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
+                    <svg height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                             th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
                     </svg>
                 </div>
             </div>
         </div>
     </section>
 </main>
-<script>
 
-    // Get the modal, image, and modal image elements
-    var modal = document.getElementById("imageModal");
-    var img = document.getElementById("croppedImage");
-    var modalImg = document.getElementById("modalImage");
-
-    // Open the modal when the cropped image is clicked
-    img.onclick = function() {
-        modal.style.display = "block";
-        modalImg.src = this.src;
-    }
-
-    // Close the modal when the "x" is clicked
-    function closeModal() {
-        modal.style.display = "none";
-    }
-
-
-
-        function navigateToReviewPage() {
-        window.location.href = "create-a-review.html";
-    }
-
-
-</script>
 
 
 </body>
 <footer class="container-fluid bg-dark text-white py-3 mt-5">
     <div class="container text-center">
-        <p>&copy; 2023 ThunderTaste. All rights reserved.</p>
+        <p>© 2023 ThunderTaste. All rights reserved.</p>
     </div>
 </footer>
 

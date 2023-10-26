@@ -8,8 +8,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            // Navigate to recipe-view.html
-            window.location = 'recipe-view.html';
+            // Get the recipe ID from the data attribute
+            const recipeId = this.getAttribute('data-recipe-id');
+
+            // Navigate to the specific recipe-view page
+            window.location.href = `/recipe/${recipeId}`;
+
         });
     });
 });
+

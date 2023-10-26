@@ -10,21 +10,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/recipes")
+//@RequestMapping("/recipes")
 public class RecipeController {
 
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private RecipeService recipeService;
+
     // List all recipes
-    @GetMapping
+    @GetMapping("/recipes")
     public String listAllRecipes(Model model) {
         Iterable<Recipe> recipes = recipeRepository.findAll();
         model.addAttribute("recipes", recipes);
         return "recipes/list";
     }
 
-    // View a specific recipe by ID
+  /*  // View a specific recipe by ID
     @GetMapping("/{id}")
     public String viewRecipe(@PathVariable Long id, Model model) {
         Optional<Recipe> recipeOpt = recipeRepository.findById(id);
@@ -35,7 +38,7 @@ public class RecipeController {
             return "error/recipeNotFound";
         }
     }
-
+*/
     // Add a new recipe
     @GetMapping("/add")
     public String showAddRecipeForm(Model model) {
@@ -91,6 +94,20 @@ public class RecipeController {
         return "recipes/searchResults";
     }
 
+
+    @GetMapping("recipe/{id}")
+    public String getRecipe(Model model, @PathVariable Long id) {
+        Optional<Recipe> recipeOptional = recipeService.findById(id);
+
+        if (!recipeOptional.isPresent()) {
+            // Handle the case where the recipe is not found
+            // For example, redirect to a "not found" page or return an error message
+            return "recipeNotFound";
+        }
+
+        model.addAttribute("recipe", recipeOptional.get());
+        return "recipe-view"; // name of your HTML file
+    }
 
 
 

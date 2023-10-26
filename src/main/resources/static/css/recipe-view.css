@@ -332,6 +332,38 @@ nav ul li a:hover {
     box-shadow: 0 4px 12px #FFC107; /* Adds a subtle shadow on hover */
 }
 
+/* Recipe Information Styles */
+.recipe-info {
+    margin-top: 2rem; /* Add margin to the top */
+    padding: 1rem; /* Add padding around the section */
+    background-color: #f8f9fa; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.recipe-stats {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    justify-content: space-evenly; /* Even spacing of items */
+}
+
+.recipe-stat {
+    flex-basis: 25%; /* Take up 25% of the container width */
+    text-align: center; /* Center the text */
+    margin: 1rem 0; /* Margin for top and bottom */
+}
+
+.stat-label {
+    display: block; /* Block display */
+    font-weight: bold; /* Make the label bold */
+    margin-bottom: 0.5rem; /* Space below the label */
+    color: #333; /* Darker color for contrast */
+}
+
+.stat-value {
+    font-size: 1.2rem; /* Larger font size */
+    color: #007bff; /* Brand color or any color of choice */
+}
 
 /***********************************
  Mobile Responsive Design

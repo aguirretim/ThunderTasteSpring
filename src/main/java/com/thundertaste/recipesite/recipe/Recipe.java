@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 
 
 import java.util.Date;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.logging.Logger;
 @Entity
 @Table(name = "recipe")
 public class Recipe extends BaseEntity {
@@ -155,6 +157,44 @@ public class Recipe extends BaseEntity {
 
     public void setDatePosted(Date datePosted) {
         this.datePosted = datePosted;
+    }
+    private static final Logger LOGGER = Logger.getLogger(Recipe.class.getName());
+
+    public int getTotalTimeInMinutes() {
+
+        int total = 0;
+        total += convertTimeToMinutes(this.prepTime);
+        total += convertTimeToMinutes(this.cookTime);
+        return total;
+    }
+
+    private int convertTimeToMinutes(String timeString) {
+
+        LOGGER.info("Converting time string to minutes: " + timeString);
+
+        // Implement logic to convert "1 hr 15 mins" to 75, etc.
+        // This is just a stub and needs actual implementation
+        int minutes = 0;
+
+        // Regular expression to find hours and minutes in the string.
+        // \d+ matches one or more digits. (?:...)? is a non-capturing group for zero or one occurrence.
+        Pattern pattern = Pattern.compile("(?:(\\d+)\\s*(?:hours?|hrs?))?\\s*(?:(\\d+)\\s*(?:minutes?|mins?))?", Pattern.CASE_INSENSITIVE);
+
+        Matcher matcher = pattern.matcher(timeString);
+        if (matcher.find()) {
+            // Extract hours and minutes from the matcher groups.
+            // Group 1 is hours; group 2 is minutes.
+            String hoursStr = matcher.group(1);
+            String minutesStr = matcher.group(2);
+
+            int hours = (hoursStr != null) ? Integer.parseInt(hoursStr) : 0;
+            int mins = (minutesStr != null) ? Integer.parseInt(minutesStr) : 0;
+
+            // Total minutes = hours converted to minutes + minutes.
+            minutes = hours * 60 + mins;
+        }
+        LOGGER.info("Total minutes: " + minutes);
+        return minutes;
     }
 
 }

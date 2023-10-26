@@ -75,12 +75,12 @@
     <section class="recent-recipes">
         <div th:each="recipe, iterStat : ${recipes}">
             <th:block th:if="${iterStat.count <= 6}">
-                <article class="recipe-card">
-                    <div class="recipe-image-wrapper">
+                <article class="recipe-card" th:data-recipe-id="${recipe.getId}">
+                <div class="recipe-image-wrapper" >
                         <img alt="Default Alt Text" src="../static/images/v3_31.png"
                              th:src="@{images/${recipe.image}}"
                              th:alt="${recipe.getTitle()}">
-                        <h3 th:text="${recipe.getTitle()}">Stormy Sirloin</h3>
+                        <h3 th:text="${recipe.getTitle()}">Default Title Text</h3>
                         <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43"
                              xmlns="http://www.w3.org/2000/svg">
                             <use xlink:href="../static/images/icons/icons.svg#fave-icon"
