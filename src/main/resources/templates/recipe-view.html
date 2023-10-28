@@ -127,13 +127,13 @@
     <section class="mt-2 mb-3">
         <h3>Ingredients</h3>
         <ul th:if="${recipe.ingredients != null}">
-            <li th:each="ingredient : ${#strings.arraySplit(recipe.ingredients, ',')}">
+            <li th:each="ingredient : ${recipe.ingredients}">
                 <span th:text="${ingredient}">Ingredient</span>
             </li>
         </ul>
         <h3>Directions</h3>
         <ol th:if="${recipe.steps != null}">
-            <li th:each="step : ${#strings.arraySplit(recipe.steps, '.')}">
+            <li th:each="step : ${recipe.steps}">
                 <span th:text="${step}">Step</span>
             </li>
         </ol>

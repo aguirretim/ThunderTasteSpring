@@ -1,4 +1,5 @@
 package com.thundertaste.recipesite.core;
+
 import com.thundertaste.recipesite.recipe.Recipe;
 import com.thundertaste.recipesite.recipe.RecipeRepository;
 import com.thundertaste.recipesite.user.User;
@@ -64,13 +65,28 @@ public class DatabaseLoader implements ApplicationRunner {
         // Creating a list to hold sample Recipe entities.
         List<Recipe> sampleRecipes = new ArrayList<>();
 
-        // Loop to create 10 sample Recipe entities.
+// Loop to create 10 sample Recipe entities.
         for (int i = 0; i < 10; i++) {
+            List<String> ingredients = Arrays.asList(
+                    "Ingredient 1 for recipe " + i,
+                    "Ingredient 2 for recipe " + i,
+                    "meat" + i,
+                    "veggie" + i
+                    // Add more ingredients as needed
+            );
+
+            List<String> steps = Arrays.asList(
+                    "Step 1 for recipe " + i,
+                    "Step 2 for recipe " + i,
+                    "Step 3 for recipe " + i
+                    // Add more steps as needed
+            );
+
             Recipe recipe = new Recipe(
                     "Recipe " + i,
                     "Description for recipe " + i,
-                    "Ingredients for recipe " + i,
-                    "Steps for recipe " + i,
+                    ingredients,
+                    steps,  // Passing the list of steps
                     "image" + i,
                     null,  // Assuming category can be null for simplicity
                     "30 minutes",
@@ -84,5 +100,6 @@ public class DatabaseLoader implements ApplicationRunner {
 
         // Using the RecipeRepository, we save all the sample recipes into the database.
         recipes.saveAll(sampleRecipes);
+
     }
 }

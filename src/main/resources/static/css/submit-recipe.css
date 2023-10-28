@@ -245,6 +245,19 @@ nav ul li a:hover {
     display: flex;
 }
 
+
+.input-wrapper svg {
+    cursor: pointer; /* Changes cursor to pointer to indicate clickability */
+    fill: #333; /* Default color - choose a color that suits your design */
+    transition: fill 0.3s ease; /* Smooth transition for color change */
+}
+
+.input-wrapper svg:hover,
+.input-wrapper svg:focus {
+    fill: #ff0000; /* Change color on hover/focus - choose your own hover color */
+}
+
+
 /***********************************
  RECIPE FORM
 ************************************/
@@ -259,6 +272,22 @@ nav ul li a:hover {
 .btn-secondary {
     background-color: #007BFF;
     border-color: #007BFF;
+}
+.custom-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1%;
+    max-width: 18%;
+}
+
+.custom-form-group label {
+    font-weight: bold; /* Make label text bold */
+    margin-bottom: 5px; /* Spacing between label and input field */
+}
+
+.form-text.text-danger {
+    display: none; /* Initially hide error text */
+    color: #dc3545; /* Bootstrap danger color */
 }
 
 /***********************************
@@ -286,4 +315,10 @@ nav ul li a:hover {
         gap: 5px;
     }
 
+}
+
+@media (min-width: 576px) {
+    .custom-form-group {
+        width: auto; /* Adjust width as per requirement */
+    }
 }

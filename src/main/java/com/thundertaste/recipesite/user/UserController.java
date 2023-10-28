@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -33,18 +34,18 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        Optional<UserTransferObject> userDto  = userService.getUserAsDTO(id) ;
+        if (userDto.isPresent()) {
+            return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/allusers")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<List<UserTransferObject>> getAllUsers() {
+        List<UserTransferObject> userDtos = userService.getAllUsers();
+        return new ResponseEntity<>(userDtos, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -70,25 +71,26 @@ public class UserController {
         }
     }
 
-    @GetMapping("/username/{username}")
     public ResponseEntity<?> findByUsername(@PathVariable String username) {
-        Optional<User> user = userService.findByUsername(username);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        Optional<UserTransferObject> userDto = userService.findByUsername(username);
+        if (userDto.isPresent()) {
+            return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
     }
 
+
     @GetMapping("/email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email) {
-        Optional<User> user = userService.findByEmail(email);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        Optional<UserTransferObject> userDto = userService.findByEmail(email);
+        if (userDto.isPresent()) {
+            return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
     }
+
 
     @GetMapping("/my-account")
     public String viewProfile(Model model) {

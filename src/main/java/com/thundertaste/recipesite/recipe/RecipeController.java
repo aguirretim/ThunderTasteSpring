@@ -1,13 +1,29 @@
 package com.thundertaste.recipesite.recipe;
 
 
+import com.thundertaste.recipesite.user.User;
+import com.thundertaste.recipesite.user.UserRepository;
+import com.thundertaste.recipesite.user.UserService;
+import com.thundertaste.recipesite.user.UserTransferObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.time.LocalDateTime;
+
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+
 
 @Controller
 //@RequestMapping("/recipes")
@@ -19,6 +35,12 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService; // Add this line
+
     // List all recipes
     @GetMapping("/recipes")
     public String listAllRecipes(Model model) {
@@ -27,18 +49,7 @@ public class RecipeController {
         return "recipes/list";
     }
 
-  /*  // View a specific recipe by ID
-    @GetMapping("/{id}")
-    public String viewRecipe(@PathVariable Long id, Model model) {
-        Optional<Recipe> recipeOpt = recipeRepository.findById(id);
-        if (recipeOpt.isPresent()) {
-            model.addAttribute("recipe", recipeOpt.get());
-            return "recipes/view";
-        } else {
-            return "error/recipeNotFound";
-        }
-    }
-*/
+
     // Add a new recipe
     @GetMapping("/add")
     public String showAddRecipeForm(Model model) {
@@ -110,6 +121,56 @@ public class RecipeController {
     }
 
 
+    @GetMapping("/submit-recipe")
+    public String displaySubmitRecipes(Model model) {
+        Recipe recipe = new Recipe();  // Recipe should have a title field
+        model.addAttribute("recipe", recipe);
 
+        return "submit-recipe";
+    }
+
+    @PostMapping("/submit-recipe")
+    public String submitRecipe(@ModelAttribute("recipe") Recipe recipe,
+                               @RequestParam("recipePhoto") MultipartFile file,
+                               BindingResult result,
+                               Model model) {
+
+        if (result.hasErrors()) {
+            // handle errors
+        }
+
+        // Getting the current logged-in username
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        // Find user DTO based on the username
+        UserTransferObject authorDto = userService.findUserByUsername(currentPrincipalName);
+
+        // Check if author DTO was found
+        if (authorDto == null) {
+            // Handle the case when the user is not found
+            return "redirect:/error"; // for example
+        }
+
+        // Now, you need to set the author of the recipe.
+        // Assuming you have a method in your Recipe class to accept a UserTransferObject
+        // Convert UserTransferObject to User entity
+        User author = userService.convertToUserEntity(authorDto);
+        recipe.setAuthor(author);
+        // Continue as before...
+        recipe.setDatePosted(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+
+        // Handle file saving
+        // ...
+
+        // Save recipe, this should populate the recipe with an ID
+        Recipe savedRecipe = recipeService.save(recipe);
+
+        // Use RedirectAttributes to add flash attributes if needed
+        // redirectAttributes.addFlashAttribute("message", "Recipe created successfully!");
+
+        // Redirect to the recipe view page with the ID of the new recipe
+        return "redirect:/recipe/" + savedRecipe.getId();
+    }
 
 }

@@ -4,13 +4,17 @@ package com.thundertaste.recipesite.recipe;
 import com.thundertaste.recipesite.category.Category;
 import com.thundertaste.recipesite.core.BaseEntity;
 import com.thundertaste.recipesite.user.User;
+import com.thundertaste.recipesite.user.UserTransferObject;
 import jakarta.persistence.*;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
+
 @Entity
 @Table(name = "recipe")
 public class Recipe extends BaseEntity {
@@ -23,10 +27,11 @@ public class Recipe extends BaseEntity {
     private String description;
 
     @Column(nullable = false)
-    private String ingredients;
+    @ElementCollection
+    private List<String> ingredients;
 
     @Column(nullable = false)
-    private String steps;
+    private List<String> steps = new ArrayList<>();
 
     @Column
     private String image;
@@ -51,11 +56,12 @@ public class Recipe extends BaseEntity {
     @Column(nullable = false)
     private Date datePosted;
 
-    protected Recipe(){
+    protected Recipe() {
         super();
     }
 
-    public Recipe(String title, String description, String ingredients, String steps, String image, Category category, String prepTime, String cookTime, int servingSize, User author, Date datePosted) {
+
+    public Recipe(String title, String description, List<String> ingredients, List<String> steps, String image, Category category, String prepTime, String cookTime, int servingSize, User author, Date datePosted) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
@@ -87,22 +93,23 @@ public class Recipe extends BaseEntity {
         this.description = description;
     }
 
-    public String getIngredients() {
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
 
-    public String getSteps() {
+
+    // getters and setters for steps
+    public List<String> getSteps() {
         return steps;
     }
 
-    public void setSteps(String steps) {
+    public void setSteps(List<String> steps) {
         this.steps = steps;
     }
-
     public String getImage() {
         return image;
     }
@@ -158,6 +165,7 @@ public class Recipe extends BaseEntity {
     public void setDatePosted(Date datePosted) {
         this.datePosted = datePosted;
     }
+
     private static final Logger LOGGER = Logger.getLogger(Recipe.class.getName());
 
     public int getTotalTimeInMinutes() {

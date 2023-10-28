@@ -1,10 +1,12 @@
 package com.thundertaste.recipesite.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -27,14 +29,25 @@ public class UserService {
         return userRepository.save(user);
     }
 
+
+
     // Fetch a user by ID
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
+    // Fetch a user by ID and convert to DTO
+    public Optional<UserTransferObject> getUserAsDTO(Long id) {
+        return userRepository.findById(id).map(UserTransferObject::fromUser);
+    }
+    // Fetch all users
+    public List<UserTransferObject> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserTransferObject::new)
+                .collect(Collectors.toList());
     }
 
-    // Fetch all users
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    // Fetch all users as DTOs
+    public List<UserTransferObject> getAllUsersAsDTOs() {
+        return userRepository.findAll().stream()
+                .map(UserTransferObject::fromUser)
+                .collect(Collectors.toList());
     }
 
     // Update user
@@ -53,15 +66,40 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    // Find by username
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    // Find by username and convert to DTO
+    public Optional<UserTransferObject> findUserTransferObjectByUsername(String username) {
+        return userRepository.findByUsername(username).map(UserTransferObject::fromUser);
+    }
+    // Find by email
+    // Find by email and convert to DTO
+    public Optional<UserTransferObject> findUserTransferObjectByEmail(String email) {
+        return userRepository.findByEmail(email).map(UserTransferObject::fromUser);
+    }
+
+    // Find by username and return DTO
+    public Optional<UserTransferObject> findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(UserTransferObject::new);
     }
 
     // Find by email
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<UserTransferObject> findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(UserTransferObject::new); // Convert User to UserTransferObject
     }
 
+    // Find by username and return DTO
+    public UserTransferObject findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(UserTransferObject::new)
+                .orElse(null);
+    }
+
+    public User convertToUserEntity(UserTransferObject userDto) {
+        // Assuming userDto has a method getUsername() to get the username
+        // And your UserRepository has a method findByUsername to fetch the User entity
+        return userRepository.findByUsername(userDto.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 
 }

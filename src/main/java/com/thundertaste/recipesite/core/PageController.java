@@ -45,11 +45,6 @@ public class PageController {
     }
 
 
-    @GetMapping("/submit-recipe")
-    public String displaySubmitRecipes() {
-        return "submit-recipe";
-    }
-
     @GetMapping("/my-recipes")
     public String displayMyRecipes() {
         return "my-recipes";
