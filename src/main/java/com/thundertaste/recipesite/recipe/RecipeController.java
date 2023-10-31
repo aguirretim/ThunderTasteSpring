@@ -178,8 +178,7 @@ public class RecipeController {
         // Use RedirectAttributes to add flash attributes if needed
         // redirectAttributes.addFlashAttribute("message", "Recipe created successfully!");
 
-        // Redirect to the recipe view page with the ID of the new recipe
-        return "redirect:/recipe/" + savedRecipe.getId();
+
     }*/
 
     //@RequestParam("recipePhoto") MultipartFile file,
@@ -196,7 +195,11 @@ public class RecipeController {
             recipeRepository.save(recipe);
             redirectAttributes.addFlashAttribute("message", "Recipe submitted successfully!");
 
-            return "redirect:/index";
+            // Save recipe, this should populate the recipe with an ID
+            Recipe savedRecipe = recipeService.save(recipe);
+
+            // Redirect to the recipe view page with the ID of the new recipe
+            return "redirect:/recipe/" + savedRecipe.getId();
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Error submitting recipe. Please try again.");
