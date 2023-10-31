@@ -24,4 +24,13 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
+    public List<Recipe> searchRecipes(String query) {
+        // Implement search logic (could be a simple findAllByNameContaining or a more complex query)
+        return recipeRepository.findByTitleContaining(query);
+    }
+
+    public List<Recipe> getAllRecipes() {
+        return (List<Recipe>) recipeRepository.findAll();
+    }
+
 }

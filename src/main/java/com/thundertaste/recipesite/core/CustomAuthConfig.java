@@ -55,15 +55,16 @@ public class CustomAuthConfig {
                                 new AntPathRequestMatcher("/my-account"),
                                 new AntPathRequestMatcher("/my-recipes"),
                                 new AntPathRequestMatcher("/recipe-search"),
+                                new AntPathRequestMatcher("/search"),
+                                new AntPathRequestMatcher("/search?"),
                                 new AntPathRequestMatcher("/recipe-view"),
                                 new AntPathRequestMatcher("/recipe/*"),
                                 new AntPathRequestMatcher("/recipes/*"),
                                 new AntPathRequestMatcher("/signup"),
-                                new AntPathRequestMatcher("/submit-recipe"),
                                 new AntPathRequestMatcher("/home")
                         ).permitAll()
                         // This line restricts access to /index only to users with roles USER or ADMIN.
-                        .requestMatchers(new AntPathRequestMatcher("/index")).hasAnyRole("USER", "ADMIN")
+                            //.requestMatchers(new AntPathRequestMatcher("/index")).hasAnyRole("USER", "ADMIN")
                         // Any other request must be authenticated.
                         .anyRequest().authenticated()
                 )

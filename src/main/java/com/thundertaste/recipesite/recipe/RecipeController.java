@@ -104,7 +104,7 @@ public class RecipeController {
         }
     }
 
-    // Search for recipes by name
+    /*// Search for recipes by name
     @GetMapping("/search")
     public String searchRecipes(@RequestParam("q") String keyword, Model model) {
         List<Recipe> recipes = recipeRepository.searchByName(keyword);
@@ -112,7 +112,7 @@ public class RecipeController {
         model.addAttribute("searchedFor", keyword);
         return "recipes/searchResults";
     }
-
+*/
 
     @GetMapping("recipe/{id}")
     public String getRecipe(Model model, @PathVariable Long id) {
@@ -148,24 +148,7 @@ public class RecipeController {
             // handle errors
         }
 
-        // Getting the current logged-in username
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        // Find user DTO based on the username
-        UserTransferObject authorDto = userService.findUserByUsername(currentPrincipalName);
-
-        // Check if author DTO was found
-        if (authorDto == null) {
-            // Handle the case when the user is not found
-            return "redirect:/error"; // for example
-        }
-
-        // Now, you need to set the author of the recipe.
-        // Assuming you have a method in your Recipe class to accept a UserTransferObject
-        // Convert UserTransferObject to User entity
-        User author = userService.convertToUserEntity(authorDto);
-        recipe.setAuthor(author);
         // Continue as before...
         recipe.setDatePosted(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
 
@@ -191,6 +174,27 @@ public class RecipeController {
                 saveFile(file); // Or handle as per your application need
             }*/
 
+            // Getting the current logged-in username
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentPrincipalName = authentication.getName();
+
+            // Find user DTO based on the username
+            UserTransferObject authorDto = userService.findUserByUsername(currentPrincipalName);
+
+            // Check if author DTO was found
+            if (authorDto == null) {
+                // Handle the case when the user is not found
+                return "redirect:/error"; // for example
+            }
+
+            // Now, you need to set the author of the recipe.
+            // Assuming you have a method in your Recipe class to accept a UserTransferObject
+            // Convert UserTransferObject to User entity
+            User author = userService.convertToUserEntity(authorDto);
+            recipe.setAuthor(author);
+
+
+
             recipe.setDatePosted(new Date()); // Sets the current date and time
             recipeRepository.save(recipe);
             redirectAttributes.addFlashAttribute("message", "Recipe submitted successfully!");
@@ -205,8 +209,23 @@ public class RecipeController {
             redirectAttributes.addFlashAttribute("errorMessage", "Error submitting recipe. Please try again.");
             return "submit-recipe";
         }
-    }
 
+
+
+    }
+    @GetMapping("/search")
+    public String search(@RequestParam(value = "query", required = false) String query, Model model) {
+        List<Recipe> recipes;
+        if (query != null && !query.isEmpty()) {
+            recipes = recipeService.searchRecipes(query);
+        } else {
+            // Handle the case when query is not provided
+            // Example: Return all recipes or a default set
+            recipes = recipeService.getAllRecipes(); // Ensure you have a method to handle this
+        }
+        model.addAttribute("recipes", recipes);
+        return "recipe-search"; // Name of the Thymeleaf template
+    }
 
     private void saveFile(MultipartFile file) throws IOException {
         String uploadDir = "/path/to/uploads";

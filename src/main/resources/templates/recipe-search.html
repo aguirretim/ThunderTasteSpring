@@ -54,174 +54,38 @@
 </header>
 <main class="container my-4">
 <div class="search-box mt-3 d-flex">
-    <input type="text" class="form-control" placeholder="Search">
+    <form action="/search" method="get">
+    <input type="text" name="query"  class="form-control" placeholder="Search">
     <button class="btn btn-primary ml-2">GO</button>
+    </form>
 </div>
 
 <section class="recent-recipes">
 
-    <article class="recipe-card" data-url="#">
+    <div th:each="recipe : ${recipes}">
+        <article class="recipe-card" th:attr="data-recipe-id=${recipe.id}">
 
-         <div class="recipe-image-wrapper" >
-            <img alt="Stormy Sirloin Image" src="images/v3_31.png">
-            <h3>Stormy Sirloin</h3>
-            <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#fave-icon"></use>
-            </svg>
-        </div>
-        <div class="star-ratings">
-            <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-            </svg>
-            <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-            </svg>
-            <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-            </svg>
-            <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-        </div>
-    </article>
-
-    <article class="recipe-card" data-url="#">
-        <div class="recipe-image-wrapper">
-            <img alt="Zap-Zone Zesty Pizza Image" src="images/v3_146.png">
-            <h3>Zap-Zone Zesty Pizza</h3>
-            <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#fave-icon"></use>
-            </svg>
-        </div>
-        <div class="star-ratings">
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-        </div>
-    </article>
-
-    <article class="recipe-card" data-url="#">
-        <div class="recipe-image-wrapper">
-            <img alt="Pasta PowerPlay Image" src="images/v3_148.png">
-            <h3>Pasta PowerPlay</h3>
-            <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#fave-icon"></use>
-            </svg>
-        </div>
-        <div class="star-ratings">
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-        </div>
-    </article>
-
-    <article class="recipe-card" data-url="#">
-        <div class="recipe-image-wrapper">
-            <img alt="Thunderbird Turkey Image" src="images/v3_154.png">
-            <h3>Thunderbird Turkey</h3>
-            <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#fave-icon"></use>
-            </svg>
-        </div>
-        <div class="star-ratings">
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-        </div>
-    </article>
-
-    <article class="recipe-card" data-url="#">
-        <div class="recipe-image-wrapper">
-            <img alt="Zappling Dumplings Image" src="images/v3_150.png">
-            <h3>Zappling Dumplings</h3>
-            <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#fave-icon"></use>
-            </svg>
-        </div>
-        <div class="star-ratings">
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-        </div>
-    </article>
-
-    <article class="recipe-card" data-url="#">
-        <div class="recipe-image-wrapper">
-            <img alt="BoltBite Burger Image" src="images/v3_152.png">
-            <h3>BoltBite Burger</h3>
-            <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#fave-icon"></use>
-            </svg>
-        </div>
-        <div class="star-ratings">
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-            <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
-            </svg>
-        </div>
-    </article>
+            <div class="recipe-image-wrapper">
+                <img th:src="@{${recipe.image}}" th:alt="${recipe.title}">
+                <h3 th:text="${recipe.title}">Recipe Name</h3>
+                <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="images/icons/icons.svg#fave-icon"></use>
+                </svg>
+            </div>
+            <div class="star-ratings">
+                <div th:each="star,iterStat : ${#numbers.sequence(1,5)}">
+                    <!--th:if="${recipe.rating >= iterStat.count}"-->
+                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                    </svg>
+                    <!--th:unless="${recipe.rating >= iterStat.count}"-->
+                    <svg  height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
+                    </svg>
+                </div>
+            </div>
+        </article>
+    </div>
 </section>
 </main>
 </body>
