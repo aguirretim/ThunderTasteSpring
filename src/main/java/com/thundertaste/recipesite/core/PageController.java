@@ -38,11 +38,7 @@ public class PageController {
         return "index"; // name of your template
     }
 
-    @GetMapping("/signup")
-    public String showSignupForm(Model model) {
-        model.addAttribute("user", new User());
-        return "signup";
-    }
+
 
 
     @GetMapping("/my-recipes")

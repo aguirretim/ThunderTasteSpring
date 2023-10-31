@@ -16,7 +16,7 @@
     <div class="background-image"></div>
     <div class="signup-box">
         <div class="login-header">
-            <a href="index.html" th:href="@{/index.html}" class="branding-link">
+            <a href="index.html" th:href="@{/index}" class="branding-link">
                 <h1 class="brand-name">ThunderTaste</h1>
                 <div class="brand-icon">
                     <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +31,7 @@
         <form id="signupForm" th:action="@{/signup}" method="post" th:object="${user}">
             <div class="input-box">
                 <input type="email" id="email" class="input-field" placeholder="Email" th:field="*{email}">
-                <div class="error-message" id="emailError"></div>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message" id="emailError"></div>
             </div>
             <div class="input-box">
                 <input type="text" id="username" class="input-field" placeholder="Username" th:field="*{username}">

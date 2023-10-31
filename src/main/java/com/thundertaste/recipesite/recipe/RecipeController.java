@@ -16,6 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import java.time.ZoneId;
@@ -60,7 +68,7 @@ public class RecipeController {
     @PostMapping("/add")
     public String addRecipe(@ModelAttribute Recipe recipe) {
         recipeRepository.save(recipe);
-        return "redirect:/recipes";
+        return "redirect:/index";
     }
 
     // Update an existing recipe
@@ -129,6 +137,7 @@ public class RecipeController {
         return "submit-recipe";
     }
 
+    /*
     @PostMapping("/submit-recipe")
     public String submitRecipe(@ModelAttribute("recipe") Recipe recipe,
                                @RequestParam("recipePhoto") MultipartFile file,
@@ -171,6 +180,46 @@ public class RecipeController {
 
         // Redirect to the recipe view page with the ID of the new recipe
         return "redirect:/recipe/" + savedRecipe.getId();
+    }*/
+
+    //@RequestParam("recipePhoto") MultipartFile file,
+    @PostMapping("/submit-recipe")
+    public String submitRecipe(@ModelAttribute Recipe recipe,
+
+                               RedirectAttributes redirectAttributes)  {
+        try {
+            /*if (!file.isEmpty()) {
+                saveFile(file); // Or handle as per your application need
+            }*/
+
+            recipe.setDatePosted(new Date()); // Sets the current date and time
+            recipeRepository.save(recipe);
+            redirectAttributes.addFlashAttribute("message", "Recipe submitted successfully!");
+
+            return "redirect:/index";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Error submitting recipe. Please try again.");
+            return "submit-recipe";
+        }
     }
+
+
+    private void saveFile(MultipartFile file) throws IOException {
+        String uploadDir = "/path/to/uploads";
+        Path uploadPath = Paths.get(uploadDir);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            Path filePath = uploadPath.resolve(file.getOriginalFilename());
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            throw new IOException("Could not save image file: " + file.getOriginalFilename(), ioe);
+        }
+    }
+
 
 }

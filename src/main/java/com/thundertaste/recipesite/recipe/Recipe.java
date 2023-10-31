@@ -31,6 +31,7 @@ public class Recipe extends BaseEntity {
     private List<String> ingredients;
 
     @Column(nullable = false)
+    @ElementCollection
     private List<String> steps = new ArrayList<>();
 
     @Column

@@ -169,7 +169,6 @@ function setupTimeInputHandlers() {
 // Handles the form submission event.
 function setupFormSubmissionHandler() {
     document.querySelector('form').addEventListener('submit', function (event) {
-        event.preventDefault();
         let isFormValid = validateRecipeTitle() && validateDescription() && validateAllIngredients() && validateAllSteps();
 
         if (isFormValid) {
@@ -188,6 +187,17 @@ function setupFormSubmissionHandler() {
                 console.log(key, value);
             }
         }
+
+        if (!isFormValid) {
+            event.preventDefault(); // Prevent form submission only if the form is invalid
+            console.log(key, value);
+            // You may want to display error messages or logging here
+        } else {
+            // If the form is valid, do nothing here. Thymeleaf will handle the submission.
+            // Note: You do not need to manually gather the form data for Thymeleaf submission
+            console.log(key, value);
+        }
+
     });
 }
 

@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -24,6 +25,8 @@ public class CustomAuthConfig {
     // Injects the BCrypt password encoder used for hashing passwords.
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;  // Autowire the password encoder
+
+
 
     // Configures global settings for authentication.
     @Autowired

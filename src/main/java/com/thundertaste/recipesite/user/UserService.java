@@ -1,9 +1,16 @@
 package com.thundertaste.recipesite.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,8 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Create a new user
     public User createUser(User user) {
@@ -24,8 +36,14 @@ public class UserService {
             throw new RuntimeException("Email already registered!");
         }
 
-        // Ideally, hash the password before saving. You'd use a utility or a library like BCrypt here.
-        user.setPasswordHash(/*hashing_function_here*/(user.getPasswordHash()));
+        // Hash the password before saving
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+
+        // Set the join date to the current date
+        LocalDate localDate = LocalDate.now();
+        user.setJoinedDate(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+        // Save the user
         return userRepository.save(user);
     }
 

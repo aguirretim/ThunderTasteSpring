@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -103,7 +104,9 @@ public class UserController {
 
         // Add user details to the model
         model.addAttribute("user", user);
-
+        if (user.getBio() == null) {
+            user.setBio("");
+        }
         return "my-account";
 
     }
@@ -122,6 +125,34 @@ public class UserController {
         }
         return "my-account";
     }
+
+
+
+    @GetMapping("/signup")
+    public String showSignUpForm(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String processRegistration(@ModelAttribute("user") User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "signup";
+        }
+        // Save user or handle signup logic
+
+        try {
+            userService.createUser(user);
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "signup";
+        }
+
+        // Redirect to a confirmation page, or perhaps the login page
+        return "redirect:/login";
+    }
+
+
 
 }
 
