@@ -31,7 +31,8 @@
         <form id="signupForm" th:action="@{/signup}" method="post" th:object="${user}">
             <div class="input-box">
                 <input type="email" id="email" class="input-field" placeholder="Email" th:field="*{email}">
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message" id="emailError"></div>
+                <div class="error-message" id="emailError"></div>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message" ></div>
             </div>
             <div class="input-box">
                 <input type="text" id="username" class="input-field" placeholder="Username" th:field="*{username}">
