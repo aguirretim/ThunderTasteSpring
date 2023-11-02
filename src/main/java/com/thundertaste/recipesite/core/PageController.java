@@ -41,10 +41,6 @@ public class PageController {
 
 
 
-    @GetMapping("/my-recipes")
-    public String displayMyRecipes() {
-        return "my-recipes";
-    }
 
     @GetMapping("/recipe-search")
     public String browseRecipes() {

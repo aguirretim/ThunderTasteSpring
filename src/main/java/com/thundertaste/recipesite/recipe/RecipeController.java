@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 import java.time.ZoneId;
@@ -243,5 +244,24 @@ public class RecipeController {
         }
     }
 
+
+    @GetMapping("/my-recipes")
+    public String myRecipes(Model model, Principal principal) {
+        // Fetch the User DTO using the username
+        UserTransferObject userDto = userService.findUserByUsername(principal.getName());
+        if (userDto == null) {
+            // Handle the case where the user DTO is not found
+            // Redirect to login
+            return "redirect:/login";
+        }
+
+        // Ensure your DTO has a method to get the userID
+        Long userId = userDto.getUserID(); // replace getUserID with your actual method to get ID from DTO
+
+        // Fetch the recipes using the userID
+        List<Recipe> personalRecipes = recipeService.findRecipesByUserId(userId);
+        model.addAttribute("recipes", personalRecipes);
+        return "my-recipes"; // Name of your Thymeleaf template
+    }
 
 }

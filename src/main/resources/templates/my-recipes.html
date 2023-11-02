@@ -38,11 +38,24 @@
             </svg>
         </a>
         <div class="separator"></div>
-        <a href="login.html">
-            <svg class="user-icon" viewbox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="images/icons/icons.svg#user-icon"></use>
-            </svg>
-            Log In</a>
+        <div th:if="${#authentication.principal == 'anonymousUser'}"> <!-- User is NOT authenticated -->
+            <a href="login.html" th:href="@{/login.html}">
+                <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="../static/images/icons/icons.svg#user-icon"
+                         th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
+                </svg>
+                Log In
+            </a>
+        </div>
+        <div th:if="${#authentication.principal != 'anonymousUser'}"> <!-- User IS authenticated -->
+            <a href="my-account.html" th:href="@{/my-account}">
+                <svg class="user-icon" viewBox="0 0 37 31" xmlns="http://www.w3.org/2000/svg">
+                    <use xlink:href="../static/images/icons/icons.svg#user-icon"
+                         th:xlink:href="@{/images/icons/icons.svg#user-icon}"></use>
+                </svg>
+                My Account
+            </a>
+        </div>
     </div>
 
     <nav>
@@ -57,7 +70,7 @@
 </header>
 
 <main class="container">
-    <div class="recipe-content">
+    <div class="recipe-content" th:if="${!recipes.isEmpty()}">
         <section class="recipe-toggle-buttons">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-primary">
@@ -69,12 +82,14 @@
                 </label>
             </div>
         </section>
-
-        <article class="recipe-card" data-url="#">
+        <div class="row">
+        <article class="recipe-card col-md-4" th:each="recipe : ${recipes}" data-url="#">
             <div class="recipe-image-wrapper">
-                <img src="images/v3_146.png" alt="Zap-Zone Zesty Pizza Image">
+                <img alt="Default Alt Text" src="../static/images/v3_31.png"
+                     th:src="@{images/${recipe.image}}"
+                     th:alt="${recipe.getTitle()}">
             </div>
-            <h3>Zap-Zone Zesty Pizza</h3>
+            <h3 th:text="${recipe.title}">Recipe Name</h3>
             <svg class="multi-menu-icon" width="43" height="27" viewbox="0 0 43 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <use xlink:href="images/icons/icons.svg#multi-menu-icon"></use>
             </svg>
@@ -88,11 +103,12 @@
                 <svg height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
                     <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
                 </svg>
-
-
             </div>
         </article>
-
+        </div>
+        <div th:if="${recipes.isEmpty()}">
+            <p>No recipes found.</p>
+        </div>
     </div>
 </main>
 

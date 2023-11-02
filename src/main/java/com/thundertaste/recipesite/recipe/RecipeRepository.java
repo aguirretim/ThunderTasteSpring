@@ -13,4 +13,7 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     List<Recipe> findByTitleContaining(String title);
 
+    // Query method to find recipes by user ID
+    List<Recipe> findByAuthorUserID(Long userId);
+
 }

@@ -33,4 +33,12 @@ public class RecipeService {
         return (List<Recipe>) recipeRepository.findAll();
     }
 
+    // Method to find recipes by user ID
+    public List<Recipe> findRecipesByUserId(Long userId) {
+        // Logic to fetch recipes from the repository/database
+        return recipeRepository.findByAuthorUserID(userId);
+    }
+
+
+
 }
