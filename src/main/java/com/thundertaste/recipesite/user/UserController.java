@@ -6,9 +6,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -112,18 +120,52 @@ public class UserController {
     }
 
     @PostMapping("/update-profile")
-    public String updateUserProfile(@RequestParam("bio") String bio, Principal principal, Model model) {
+    public String updateUserProfile(
+            @RequestParam("bio") String bio,
+            @RequestParam("profileImage") MultipartFile profileImage,
+            Principal principal,
+            RedirectAttributes attributes) {
+
         Optional<User> userOptional = userRepository.findByUsername(principal.getName());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+
+            // Update bio
             user.setBio(bio);
+
+            // Handle profile image upload
+            if (!profileImage.isEmpty()) {
+                String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
+                // Define the local path where the image should be stored
+                Path path = Paths.get("src/main/resources/static/images/profileImages/" + fileName);
+                try {
+                    // Save the file locally in the resources/static/images/profiles directory
+                    Files.copy(profileImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+                    // Now, you need to set the file path to the user object
+                    // Assume `setProfileImagePath` is a method in your User class
+                    user.setProfileImage("/images/profileImages/" + fileName);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    attributes.addFlashAttribute("errorMessage", "Could not save profile image");
+                    return "redirect:/my-account";
+                }
+            }
+
+            // Save the user information along with the bio and possibly the new image path
             userRepository.save(user);
-            model.addAttribute("user", user);
-            model.addAttribute("profileUpdated", true);
+
+            // After saving the image and bio, add attributes to show a success message
+            attributes.addFlashAttribute("user", user);
+            attributes.addFlashAttribute("profileUpdated", true);
+            attributes.addFlashAttribute("message", "Profile updated successfully!");
+
         } else {
-            model.addAttribute("errorMessage", "User not found");
+            attributes.addFlashAttribute("errorMessage", "User not found");
         }
-        return "my-account";
+
+        return "redirect:/my-account";
     }
 
 

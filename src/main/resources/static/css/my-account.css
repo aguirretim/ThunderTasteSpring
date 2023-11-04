@@ -214,6 +214,13 @@ nav ul li a:hover {
     z-index: 2000; /* high value to ensure it's on top of other elements */
 }
 
+/* CSS content related to the My Account page */
+.profile-photo-container img,
+.profile-photo-container svg {
+    /* Styles for profile image and placeholder */
+    width: 150px;
+    height: 150px;
+}
 
 
 /***********************************

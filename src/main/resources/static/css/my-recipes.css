@@ -282,6 +282,13 @@ nav ul li a:hover {
     box-shadow: 0 4px 12px #FFC107;
 }
 
+/* my-recipes.css */
+.no-recipes-message {
+    padding-left: 15px;
+    color: #888; /* Example color - adjust as needed */
+    /* Add any other styling you need here */
+}
+
 /* Toggle Button Styles */
 .recipe-toggle-buttons {
     margin: 20px 0;
@@ -330,6 +337,13 @@ flex-direction: column-reverse;
 
 .recipe-cards {
     flex-grow: 1;  /* Allow recipe cards to take remaining space */
+}
+/* CSS content related to the My Account page */
+.profile-photo-container img,
+.profile-photo-container svg {
+    /* Styles for profile image and placeholder */
+    width: 150px;
+    height: 150px;
 }
 
 

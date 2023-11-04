@@ -70,7 +70,7 @@
 </header>
 
 <main class="container">
-    <div class="recipe-content" th:if="${!recipes.isEmpty()}">
+    <div class="recipe-content" >
         <section class="recipe-toggle-buttons">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-primary">
@@ -81,12 +81,16 @@
                     Recipes
                 </label>
             </div>
+
         </section>
         <div class="row">
-        <article class="recipe-card col-md-4" th:each="recipe : ${recipes}" data-url="#">
+            <div th:if="${recipes.isEmpty()}" class="no-recipes-message">
+                <p>No recipes found.</p>
+            </div>
+        <article class="recipe-card col-md-4" th:each="recipe : ${recipes}" th:unless="${recipes.isEmpty()}" data-url="#">
             <div class="recipe-image-wrapper">
                 <img alt="Default Alt Text" src="../static/images/v3_31.png"
-                     th:src="@{images/${recipe.image}}"
+                     th:src="@{/${recipe.image}}"
                      th:alt="${recipe.getTitle()}">
             </div>
             <h3 th:text="${recipe.title}">Recipe Name</h3>
@@ -106,9 +110,7 @@
             </div>
         </article>
         </div>
-        <div th:if="${recipes.isEmpty()}">
-            <p>No recipes found.</p>
-        </div>
+
     </div>
 </main>
 

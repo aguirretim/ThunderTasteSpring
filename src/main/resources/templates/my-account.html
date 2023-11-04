@@ -58,9 +58,9 @@
 
     <nav>
         <ul>
-            <li><a href="recipe-search.html">Browse Recipes</a></li>
-            <li><a href="my-recipes.html">My Recipes</a></li>
-            <li><a href="submit-recipe.html">Submit a Recipe</a></li>
+            <li><a href="recipe-search.html" th:href="@{/recipe-search}">Browse Recipes</a></li>
+            <li><a href="my-recipes.html" th:href="@{/my-recipes}">My Recipes</a></li>
+            <li><a href="submit-recipe.html" th:href="@{/submit-recipe}">Submit a Recipe</a></li>
         </ul>
     </nav>
 
@@ -70,11 +70,12 @@
         <h2>Profile</h2>
 
         <!-- Profile Update Form -->
-        <form id="profile-update-form" th:action="@{/update-profile}" method="post">
+        <form id="profile-update-form" th:action="@{/update-profile}" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="profile-photo-container col-md-6">
+                    <!-- Image tag for previewing selected profile image -->
                     <!-- Display user's profile image if it exists -->
-                    <img th:if="${user.profileImage}" th:src="${user.profileImage}" alt="Profile Image"
+                    <img id="profileImagePreview" th:if="${user.profileImage}" th:src="${user.profileImage}" alt="Profile Image"
                          class="img-fluid" width="150" height="150"/>
 
                     <!-- Display SVG placeholder if user's profile image does not exist -->
@@ -82,7 +83,10 @@
                          xmlns="http://www.w3.org/2000/svg" alt="Profile photo" class="img-fluid">
                         <use xlink:href="images/icons/icons.svg#profile-placeholder"></use>
                     </svg>
-                    <a href="#">Change profile photo</a>
+                    <!-- Hidden file input -->
+                    <input type="file" name="profileImage" id="profileImageUpload" style="display: none;" onchange="previewProfileImage(event)"/>
+                    <!-- Link to trigger the file input -->
+                    <a href="#" onclick="document.getElementById('profileImageUpload').click(); return false;">Change profile photo</a>
                 </div>
                 <div class="col-md-6">
                     <h3 th:text="${#authentication.name}">Default Name</h3>
