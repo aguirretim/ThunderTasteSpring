@@ -88,7 +88,9 @@
 
     <p class="lead text-left mt-3 mb-4" th:text="${recipeDescription}">Default description here</p>
     <div class="image-crop-container">
-        <img alt="Default Alt Text" th:alt="${recipe.getTitle()}" src="images/v3_31.png" th:src="@{images/${recipe.image}}" id="croppedImage">
+        <img alt="Default Alt Text" th:alt="${recipe.getTitle()}"
+             src=""
+             th:src="@{/{filename}(filename=${recipe.image})}" id="croppedImage">
 
         <!-- Modal -->
         <div class="modal" id="imageModal">

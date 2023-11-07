@@ -1,11 +1,17 @@
 package com.thundertaste.recipesite.recipe;
 
 
+import com.thundertaste.recipesite.core.ImageService;
 import com.thundertaste.recipesite.user.User;
 import com.thundertaste.recipesite.user.UserRepository;
 import com.thundertaste.recipesite.user.UserService;
 import com.thundertaste.recipesite.user.UserTransferObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -20,6 +26,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,6 +57,9 @@ public class RecipeController {
 
     @Autowired
     private UserService userService; // Add this line
+
+    @Autowired
+    private ImageService imageService;
 
     // List all recipes
     @GetMapping("/recipes")
@@ -129,53 +140,79 @@ public class RecipeController {
 
 
     @PostMapping("/submit-recipe")
-    public String submitRecipe(@ModelAttribute Recipe recipe,
-
-                               RedirectAttributes redirectAttributes)  {
+    public String submitRecipe(@ModelAttribute("recipe") Recipe recipe,
+                               @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                               RedirectAttributes redirectAttributes,
+                               Authentication authentication) {
         try {
-            /*if (!file.isEmpty()) {
-                saveFile(file); // Or handle as per your application need
-            }*/
-
-            // Getting the current logged-in username
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
-
-            // Find user DTO based on the username
             UserTransferObject authorDto = userService.findUserByUsername(currentPrincipalName);
 
-            // Check if author DTO was found
             if (authorDto == null) {
-                // Handle the case when the user is not found
-                return "redirect:/error"; // for example
+                return "redirect:/error";
             }
 
-            // Now, you need to set the author of the recipe.
-            // Assuming you have a method in your Recipe class to accept a UserTransferObject
             // Convert UserTransferObject to User entity
             User author = userService.convertToUserEntity(authorDto);
             recipe.setAuthor(author);
+            recipe.setDatePosted(new Date());
 
+            // Check if the image file isn't empty and save it using ImageService
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imagePath = imageService.saveImage(imageFile); // The method to save the image and return the path
+                recipe.setImage(imagePath); // Set the image path of the recipe
+            }
 
-
-            recipe.setDatePosted(new Date()); // Sets the current date and time
-            recipeRepository.save(recipe);
-            redirectAttributes.addFlashAttribute("message", "Recipe submitted successfully!");
-
-            // Save recipe, this should populate the recipe with an ID
+            // Save the recipe and get the saved entity back to capture the generated ID
             Recipe savedRecipe = recipeService.save(recipe);
 
-            // Redirect to the recipe view page with the ID of the new recipe
+            redirectAttributes.addFlashAttribute("message", "Recipe submitted successfully!");
             return "redirect:/recipe/" + savedRecipe.getId();
+
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Error submitting recipe. Please try again.");
             return "submit-recipe";
         }
-
-
-
     }
+
+
+    @GetMapping("/images/recipePhotos/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
+        Path uploadDirectory = Paths.get("src/main/resources/static/images/recipePhotos"); // Make sure this path is correct.
+        System.out.println("Absolute path: " + uploadDirectory.toAbsolutePath().toString());
+        System.out.println("Requested filename: " + filename);
+        Path file = uploadDirectory.resolve(filename);
+        if (!Files.exists(file)) {
+            throw new RuntimeException("File not found: " + file);
+        }
+        if (!Files.isReadable(file)) {
+            throw new RuntimeException("File not readable: " + file);
+        }
+
+        System.out.println("Current directory: " + Paths.get("").toAbsolutePath().toString());
+
+        URI uri = file.toUri();
+        System.out.println("File URI: " + uri);
+
+
+        Resource resource = new UrlResource(file.toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            // Set the correct content type and inline content disposition
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } else {
+            throw new RuntimeException("Could not read the file!");
+        }
+    }
+
+
+
+
     @GetMapping("/search")
     public String search(@RequestParam(value = "query", required = false) String query, Model model) {
         List<Recipe> recipes;

@@ -65,6 +65,7 @@
 
 <section class="recipe-form container mt-1">
     <form id="recipeForm" th:action="@{/submit-recipe}" th:object="${recipe}" method="post" enctype="multipart/form-data">
+
         <div class="form-group">
             <p>Charging up your personal recipes has never been simpler! Plug them into your favorites, share the
                 current with friends, family, or electrify the ThunderTaste community.</p>
@@ -84,7 +85,9 @@
         <div class="file-input-wrapper">
             <label for="recipePhoto" class="custom-file-label">Choose File</label>
             <!-- th:field="*{image}" -->
-            <input type="file" class="form-control-file" id="recipePhoto"  hidden>
+
+            <input type="file" class="form-control-file" id="recipePhoto" name="imageFile" hidden>
+
 
             <span class="file-name">No file chosen</span>
         </div>

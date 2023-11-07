@@ -77,8 +77,8 @@
             <th:block th:if="${iterStat.count <= 6}">
                 <article class="recipe-card" th:data-recipe-id="${recipe.getId}">
                 <div class="recipe-image-wrapper" >
-                        <img alt="Default Alt Text" src="../static/images/v3_31.png"
-                             th:src="@{images/${recipe.image}}"
+                        <img alt="Default Alt Text" src="../static/images/recipePhotos/v3_31.png"
+                             th:src="@{/{filename}(filename=${recipe.image})}"
                              th:alt="${recipe.getTitle()}">
                         <h3 th:text="${recipe.getTitle()}">Default Title Text</h3>
                         <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43"

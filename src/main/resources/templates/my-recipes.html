@@ -89,8 +89,8 @@
             </div>
         <article class="recipe-card col-md-4" th:each="recipe : ${recipes}" th:unless="${recipes.isEmpty()}" data-url="#">
             <div class="recipe-image-wrapper">
-                <img alt="Default Alt Text" src="../static/images/v3_31.png"
-                     th:src="@{/${recipe.image}}"
+                <img alt="Default Alt Text" src="../static/images/recipePhotos/v3_31.png"
+                     th:src="@{/{filename}(filename=${recipe.image})}"
                      th:alt="${recipe.getTitle()}">
             </div>
             <h3 th:text="${recipe.title}">Recipe Name</h3>

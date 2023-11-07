@@ -48,6 +48,7 @@ public class CustomAuthConfig {
                                 new AntPathRequestMatcher("/images/*"),
                                 new AntPathRequestMatcher("/images/icons/*"),
                                 new AntPathRequestMatcher("/images/profileImages/*"),
+                                new AntPathRequestMatcher("/images/recipePhotos/*"),
                                 new AntPathRequestMatcher("/js/*"),
                                 new AntPathRequestMatcher("/create-a-review"),
                                 new AntPathRequestMatcher("/forgotPassword"),

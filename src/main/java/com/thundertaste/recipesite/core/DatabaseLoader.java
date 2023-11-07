@@ -82,12 +82,28 @@ public class DatabaseLoader implements ApplicationRunner {
                     // Add more steps as needed
             );
 
+
+            // Array of image filenames to be used for the recipes
+            String[] imageFilenames = {
+                    "v3_146.png",
+                    "v3_148.png",
+                    "v3_150.png",
+                    "v3_152.png",
+                    "v3_154.png",
+                    "v3_31.png"
+            };
+
+
+            // Use the modulus operator to cycle through image filenames
+            String imageFilename = imageFilenames[i % imageFilenames.length];
+
+
             Recipe recipe = new Recipe(
                     "Recipe " + i,
                     "Description for recipe " + i,
                     ingredients,
                     steps,  // Passing the list of steps
-                    "image" + i,
+                    "images/recipePhotos/"+imageFilename,
                     null,  // Assuming category can be null for simplicity
                     "30 minutes",
                     "1 hour",

@@ -80,7 +80,7 @@
         <article class="recipe-card" th:attr="data-recipe-id=${recipe.id}">
 
             <div class="recipe-image-wrapper">
-                <img th:src="@{${recipe.image}}" th:alt="${recipe.title}">
+                <img th:src="@{/{filename}(filename=${recipe.image})}" th:alt="${recipe.title}">
                 <h3 th:text="${recipe.title}">Recipe Name</h3>
                 <svg class="Fave-icon" height="43" viewBox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
                     <use xlink:href="images/icons/icons.svg#fave-icon"></use>
