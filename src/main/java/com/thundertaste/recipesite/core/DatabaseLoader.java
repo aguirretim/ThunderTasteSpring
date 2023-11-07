@@ -47,7 +47,7 @@ public class DatabaseLoader implements ApplicationRunner {
         List<User> sampleUsers = Arrays.asList(
                 new User("johndoe",
                         "johndoe@example.com",
-                        passwordEncoder.encode("passwordHash1"),
+                        passwordEncoder.encode("a"),
                         "profileImage1",
                         new Date(), "Bio for John Doe"),
                 new User("janedoe",

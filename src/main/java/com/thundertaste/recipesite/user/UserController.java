@@ -1,5 +1,8 @@
 package com.thundertaste.recipesite.user;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +24,7 @@ import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -41,13 +46,18 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
-        Optional<UserTransferObject> userDto  = userService.getUserAsDTO(id) ;
-        if (userDto.isPresent()) {
-            return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        try {
+            Optional<User> userOptional = userService.getUserById(id);
+            if (userOptional.isPresent()) {
+                UserTransferObject userDto = UserTransferObject.fromUser(userOptional.get());
+                return new ResponseEntity<>(userDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -112,19 +122,41 @@ public class UserController {
 
         // Add user details to the model
         model.addAttribute("user", user);
+
+        // Add the profile image path to the model (adjust the getProfileImage() method if necessary)
+        // This assumes that your User object has a 'getProfileImage' method that returns the path of the image
+        String profileImagePath = user.getProfileImage(); // or user.getProfileImagePath();
+        model.addAttribute("profileImagePath", profileImagePath);
+
         if (user.getBio() == null) {
             user.setBio("");
         }
         return "my-account";
-
     }
+
+    @GetMapping("/images/profileImages/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
+        Path uploadDirectory = Paths.get("/images/profileImages/");
+        Path file = uploadDirectory.resolve(filename);
+        Resource resource = new UrlResource(file.toUri());
+        if (resource.exists() || resource.isReadable()) {
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+        } else {
+            throw new RuntimeException("Could not read the file!");
+        }
+    }
+
+
+
 
     @PostMapping("/update-profile")
     public String updateUserProfile(
             @RequestParam("bio") String bio,
             @RequestParam("profileImage") MultipartFile profileImage,
             Principal principal,
-            RedirectAttributes attributes) {
+            RedirectAttributes attributes) throws IOException {
 
         Optional<User> userOptional = userRepository.findByUsername(principal.getName());
         if (userOptional.isPresent()) {
@@ -136,15 +168,28 @@ public class UserController {
             // Handle profile image upload
             if (!profileImage.isEmpty()) {
                 String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
+                String fileExtension = StringUtils.getFilenameExtension(fileName);
+                String generatedFilename = UUID.randomUUID().toString();
+                fileName = generatedFilename + (fileExtension != null ? "." + fileExtension : "");
                 // Define the local path where the image should be stored
                 Path path = Paths.get("src/main/resources/static/images/profileImages/" + fileName);
+                // The directory should already exist, you can also make the application to create it on startup
+                Path uploadDirectory = Paths.get("/images/profileImages/");
+                if (!Files.exists(uploadDirectory)) {
+                    Files.createDirectories(uploadDirectory);
+                }
+
+                Path filePath = uploadDirectory.resolve(fileName);
+                Files.copy(profileImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                user.setProfileImage(filePath.toString());
                 try {
                     // Save the file locally in the resources/static/images/profiles directory
                     Files.copy(profileImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
                     // Now, you need to set the file path to the user object
-                    // Assume `setProfileImagePath` is a method in your User class
+                    //  `setProfileImagePath` is a method in your User class+ "?t=" + System.currentTimeMillis()
                     user.setProfileImage("/images/profileImages/" + fileName);
+                    user.setProfileImage(filePath.toString());
 
                 } catch (IOException e) {
                     e.printStackTrace();

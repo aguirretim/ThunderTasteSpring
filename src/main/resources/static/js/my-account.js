@@ -1,18 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
+    var profileImageUpload = document.getElementById('profileImageUpload');
+    var changeProfilePhotoLink = document.getElementById('changeProfilePhotoLink');
 
-    // If profile was updated, show the success modal
+
+
+    // Check if profile was updated, if so, show the success modal
     if (document.querySelector('[th\\:if="${profileUpdated}"]')) {
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
     }
 
-    // Event listener to update character counter for bio textarea
+    // Initialize variables for user description and character counter
     var userDescription = document.getElementById('userDescription');
     var charCounter = document.getElementById('charCounter');
 
+    // Add event listener to user description for input to update character counter
     userDescription.addEventListener('input', function() {
         var currentLength = this.value.length;
-        charCounter.textContent = currentLength + "/150";
+        charCounter.textContent = `${currentLength}/150`;
 
         // Add 'alert' class if the character count is above 140
         if(currentLength > 140) {
@@ -21,38 +26,38 @@ document.addEventListener('DOMContentLoaded', function() {
             charCounter.classList.remove('alert');
         }
     });
+
+    // Event listener for profile image file input change
+    document.getElementById('profileImageUpload').addEventListener('change', previewProfileImage);
+
+// Event listener for the 'Change profile photo' link
+    changeProfilePhotoLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        profileImageUpload.click();
+    });
+
+    // Event listener for profile image file input change
+    profileImageUpload.addEventListener('change', previewProfileImage);
+
 });
-// This function could be used to trigger the profile image upload
-function triggerUpload() {
-    document.getElementById('profileImageUpload').click();
-}
 
-// This function could be called when the file input changes
-function submitForm() {
-    document.getElementById('profile-update-form').submit();
-}
 
-// Function to handle the image preview
+// Function to handle the image preview when file input changes
 function previewProfileImage(event) {
     var reader = new FileReader();
     reader.onload = function(){
         var output = document.getElementById('profileImagePreview');
         output.src = reader.result;
-        output.style.display = 'block'; // Make the image visible
     };
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// Event listeners
+
+
+// When the window loads, add click event listener to the change profile photo link
 window.onload = function() {
-    // Listener for the change profile photo link
     document.getElementById('changeProfilePhoto').addEventListener('click', function(event) {
         event.preventDefault();
         triggerUpload();
     });
-
-
-
-    // Listener for the profile image file input change
-    document.getElementById('profileImageUpload').addEventListener('change', submitForm);
 };

@@ -104,17 +104,6 @@ public class RecipeController {
             return "error/recipeNotFound";
         }
     }
-
-    /*// Search for recipes by name
-    @GetMapping("/search")
-    public String searchRecipes(@RequestParam("q") String keyword, Model model) {
-        List<Recipe> recipes = recipeRepository.searchByName(keyword);
-        model.addAttribute("recipes", recipes);
-        model.addAttribute("searchedFor", keyword);
-        return "recipes/searchResults";
-    }
-*/
-
     @GetMapping("recipe/{id}")
     public String getRecipe(Model model, @PathVariable Long id) {
         Optional<Recipe> recipeOptional = recipeService.findById(id);
@@ -138,34 +127,7 @@ public class RecipeController {
         return "submit-recipe";
     }
 
-    /*
-    @PostMapping("/submit-recipe")
-    public String submitRecipe(@ModelAttribute("recipe") Recipe recipe,
-                               @RequestParam("recipePhoto") MultipartFile file,
-                               BindingResult result,
-                               Model model) {
 
-        if (result.hasErrors()) {
-            // handle errors
-        }
-
-
-        // Continue as before...
-        recipe.setDatePosted(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
-
-        // Handle file saving
-        // ...
-
-        // Save recipe, this should populate the recipe with an ID
-        Recipe savedRecipe = recipeService.save(recipe);
-
-        // Use RedirectAttributes to add flash attributes if needed
-        // redirectAttributes.addFlashAttribute("message", "Recipe created successfully!");
-
-
-    }*/
-
-    //@RequestParam("recipePhoto") MultipartFile file,
     @PostMapping("/submit-recipe")
     public String submitRecipe(@ModelAttribute Recipe recipe,
 
