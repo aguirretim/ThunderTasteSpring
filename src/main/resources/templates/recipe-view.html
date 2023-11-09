@@ -17,16 +17,17 @@
 <header>
     <div class="site-branding">
         <div class="branding-container">
-            <a  href="index.html" th:href="@{/index}" class="site-title">
+            <a href="index.html" th:href="@{/index}" class="site-title">
                 <h1>ThunderTaste</h1>
                 <svg class="bolt-icon" height="50" viewBox="0 0 36 50" width="36"
                      xmlns="http://www.w3.org/2000/svg">
                     <use href="../static/images/icons/icons.svg#bolt-icon"
                          th:href="@{/images/icons/icons.svg#bolt-icon}"></use>
                 </svg>
-            </div></a>
-            <h2 th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
         </div>
+        </a>
+        <h2 th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
+    </div>
 
 
     </div>
@@ -34,7 +35,8 @@
     <div class="header-actions">
         <a href="#">
             <svg class="search-icon" viewbox="0 0 45 39" xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="../static/images/icons/icons.svg#search-icon" th:href="@{/images/icons/icons.svg#search-icon}"></use>
+                <use xlink:href="../static/images/icons/icons.svg#search-icon"
+                     th:href="@{/images/icons/icons.svg#search-icon}"></use>
             </svg>
         </a>
         <div class="separator"></div>
@@ -70,13 +72,14 @@
 </header>
 
 <main class="container mt-5 position-relative">
-    <h2 class="text-left"th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
+    <h2 class="text-left" th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
     <div class="star-ratings">
         <th:block th:each="star : ${#numbers.sequence(1, 5)}">
             <!--th:classappend="${star <= recipe.rating} ? 'rated' : 'unrated'" -->
             <svg height="24" viewBox="0 0 27 24" width="27"
                  xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="../static/images/icons/icons.svg#star-empty-icon" th:href="@{/images/icons/icons.svg#star-empty}"></use>
+                <use xlink:href="../static/images/icons/icons.svg#star-empty-icon"
+                     th:href="@{/images/icons/icons.svg#star-empty}"></use>
                 <!-- Insert additional SVG code here if needed -->
                 <!--th:xlink:href="@{images/icons/icons.svg#star-(star <= recipe .rating) ? 'full' : 'empty'}-icon"-->
             </svg>
@@ -95,7 +98,8 @@
         <!-- Modal -->
         <div class="modal" id="imageModal">
             <div class="modal-inner">
-                <button type="button" class="close btn btn-secondary btn-lg rounded-circle" onclick="closeModal()" aria-label="Close">
+                <button type="button" class="close btn btn-secondary btn-lg rounded-circle" onclick="closeModal()"
+                        aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
                 <img class="modal-content" id="modalImage" alt="" src="">
@@ -108,7 +112,7 @@
         <div class="recipe-stats">
             <div class="recipe-stat">
                 <span class="stat-label">Prep Time:</span>
-                <span class="stat-value" th:text="${recipe.prepTime}" >10 mins</span>
+                <span class="stat-value" th:text="${recipe.prepTime}">10 mins</span>
             </div>
             <div class="recipe-stat">
                 <span class="stat-label">Cook Time:</span>
@@ -142,71 +146,51 @@
         <hr>
     </section>
     <p> Share your thoughts with other ThunderChefs</p>
-    <button type="submit" class="btn btn-primary mb-2 mr-2" onclick="navigateToReviewPage();">Write a ThunderChef Review</button>
+    <form th:action="@{'/recipe/' + ${recipe.id} + '/create-a-review'}" method="get">
+        <button type="submit" class="btn btn-primary mb-2 mr-2">
+            Write a ThunderChef Review
+        </button>
+    </form>
+
     <!-- Reviews -->
-    <section>
+    <section th:if="${reviewDTOs  != null and !reviewDTOs.isEmpty()}">
         <h3>Reviews</h3>
-        <div class="card mb-4">
+        <div th:each="reviewDTO : ${reviewDTOs}" class="card mb-4">
             <div class="card-body">
-                <p>I didn't have a working grill available to me so I cooked this for two in my air fryer using two petite sirloin steaks...</p>
-                <p><strong>CookingWithThor2424</strong> - 07/21/2023</p>
-                <!-- You can add a star rating system here -->
+                <p th:text="${reviewDTO.text}">Review text goes here...</p>
+                <p>
+                    <strong th:text="${reviewDTO.username}">Username</strong>
+                    - <span th:text="${#dates.format(reviewDTO.datePosted, 'MM/dd/yyyy')}">Date</span>
+                </p>
+                <!-- Star Ratings -->
                 <div class="star-ratings">
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <p>This was very good. We don't have a grill yet so I seared these on the stove-top with the lid...</p>
-                <p><strong>ZeusBoyardee556</strong> - 05/21/2023</p>
-                <!-- You can add a star rating system here -->
-                <div class="star-ratings">
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg fill="none" height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
-                    </svg>
-                    <svg height="24" viewbox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
-                             th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
-                    </svg>
+                    <!-- Filled Stars -->
+                    <th:block th:each="star : ${#numbers.sequence(1, reviewDTO.score)}">
+                        <!-- For each number in the sequence from 1 to the score (inclusive),
+                        a filled star SVG icon is displayed. If the score is 5, this loop
+                         will run five times and create five filled star icons. -->
+
+                        <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                            <use xlink:href="../static/images/icons/icons.svg#star-filled-icon"
+                                 th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
+                        </svg>
+                    </th:block>
+                    <!-- Empty Stars -->
+                    <th:block th:each="star : ${#numbers.sequence(reviewDTO.score + 1, 5)}" th:if="${reviewDTO.score < 5}">
+                        <!-- This sequence starts from one number higher than the score and ends at 5.
+                         For example, if the score is 3, then empty stars will be generated for 4 and 5,
+                         resulting in two empty star icons. If the score is 5, no empty stars should be shown
+                         because the sequence starts at 6 (5 + 1), which is out of range. -->
+                        <svg height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                            <use xlink:href="../static/images/icons/icons.svg#star-empty-icon"
+                                 th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
+                        </svg>
+                    </th:block>
                 </div>
             </div>
         </div>
     </section>
 </main>
-
 
 
 </body>

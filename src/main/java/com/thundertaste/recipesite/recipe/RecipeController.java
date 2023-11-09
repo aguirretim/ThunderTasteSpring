@@ -2,6 +2,11 @@ package com.thundertaste.recipesite.recipe;
 
 
 import com.thundertaste.recipesite.core.ImageService;
+import com.thundertaste.recipesite.rating.Rating;
+import com.thundertaste.recipesite.rating.RatingService;
+import com.thundertaste.recipesite.review.Review;
+import com.thundertaste.recipesite.review.ReviewService;
+import com.thundertaste.recipesite.review.ReviewTransferObject;
 import com.thundertaste.recipesite.user.User;
 import com.thundertaste.recipesite.user.UserRepository;
 import com.thundertaste.recipesite.user.UserService;
@@ -14,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,6 +66,12 @@ public class RecipeController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
+    private RatingService ratingService;
 
     // List all recipes
     @GetMapping("/recipes")
@@ -122,17 +134,33 @@ public class RecipeController {
         if (!recipeOptional.isPresent()) {
             // Handle the case where the recipe is not found
             // For example, redirect to a "not found" page or return an error message
+            model.addAttribute("notFound", true);
+            model.addAttribute("message", "The requested recipe does not exist.");
             return "recipeNotFound";
         }
+        Recipe recipe = recipeOptional.get();
 
-        model.addAttribute("recipe", recipeOptional.get());
-        return "recipe-view"; // name of your HTML file
+        // Fetch the reviews and their associated authors
+        List<ReviewTransferObject> reviewDTOs = reviewService.getReviewsWithAuthors(id);
+
+
+        model.addAttribute("recipe", recipe);
+        // Fetch the reviews and ratings for this recipe
+        List<Review> reviews = reviewService.findReviewsByRecipeId(id);
+        List<Rating> ratings = ratingService.findRatingsByRecipeId(id); // If ratings are separate
+        double averageRating = calculateAverageRating(reviews); // Method to calculate average rating from the list of reviews
+
+        model.addAttribute("reviewDTOs", reviewDTOs);
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("notFound", false);
+
+        return "recipe-view";
     }
 
 
     @GetMapping("/submit-recipe")
     public String displaySubmitRecipes(Model model) {
-        Recipe recipe = new Recipe();  // Recipe should have a title field
+        Recipe recipe = new Recipe();
         model.addAttribute("recipe", recipe);
 
         return "submit-recipe";
@@ -261,6 +289,86 @@ public class RecipeController {
         List<Recipe> personalRecipes = recipeService.findRecipesByUserId(userId);
         model.addAttribute("recipes", personalRecipes);
         return "my-recipes"; // Name of your Thymeleaf template
+    }
+
+
+
+    @GetMapping("/recipe/{recipeId}/create-a-review")
+    public String reviewPage(@PathVariable Long recipeId, Model model) {
+        Optional<Recipe> optionalRecipe = recipeService.findById(recipeId);
+
+        if (optionalRecipe.isEmpty()) {
+            model.addAttribute("notFound", true);
+            model.addAttribute("message", "The requested recipe does not exist.");
+            // You can still return the same view but with a message that recipe is not found
+            return "create-a-review";
+        }
+
+        Recipe recipe = optionalRecipe.get();
+        Rating rating = Rating.createRating();
+        Review review = Review.createReview();
+
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("review", review);
+        model.addAttribute("rating", rating);
+        model.addAttribute("notFound", false);
+
+        return "create-a-review";
+    }
+
+
+    @PostMapping("/recipe/{recipeId}/submit-review")
+    public String submitReview(@PathVariable Long recipeId,
+                               @ModelAttribute("review") Review review,
+                               @ModelAttribute("rating") Rating rating,
+                               Model model,
+                               Principal principal) {
+        // logging to check the value of 'star'
+        System.out.println("Star rating received: " + rating.getScore());
+
+        model.addAttribute("review", Review.createReview());
+        model.addAttribute("rating", Rating.createRating());
+
+        Optional<Recipe> optionalRecipe = recipeService.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
+            return "redirect:/";
+        }
+
+        // Fetch the UserTransferObject or User using the principal.getName()
+        UserTransferObject user = userService.findByUsername(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Assuming UserTransferObject has a getId() method to fetch the User's ID
+        Long userId = user.getUserID();
+
+        review.setUserID(userId); // Set the user ID for the review
+        review.setRecipeID(recipeId); // Set the recipe ID for the review
+        review.setDatePosted(new Date()); // Set the current date for the review
+        review.setRating(rating);
+
+
+        rating.setUserID(userId); // Set the user ID for the rating
+        rating.setRecipeID(recipeId); // The score should already be set in the 'rating' object if your form is set up correctly
+        rating.setDateGiven(new Date());
+        ratingService.save(rating); // Save the rating
+
+        reviewService.save(review); // Save the review
+
+
+        return "redirect:/recipe/" + recipeId;
+    }
+
+
+    // Utility method to calculate average rating, assuming Review has a method getRating() which returns Rating object
+    private double calculateAverageRating(List<Review> reviews) {
+        if (reviews.isEmpty()) {
+            return 0;
+        }
+        double sum = 0.0;
+        for (Review review : reviews) {
+            sum += review.getRating().getScore(); // Assuming getScore() gets the score from Rating object
+        }
+        return sum / reviews.size();
     }
 
 }

@@ -23,7 +23,6 @@ function closeModal() {
 
 
 
-function navigateToReviewPage() {
-    window.location.href = "create-a-review.html";
+function navigateToReviewPage(recipeId) {
+    window.location.href = '/recipe/' + recipeId + '/create-a-review';
 }
-

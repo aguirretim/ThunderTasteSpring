@@ -1,7 +1,9 @@
 package com.thundertaste.recipesite.core;
 
+import com.thundertaste.recipesite.rating.Rating;
 import com.thundertaste.recipesite.recipe.Recipe;
 import com.thundertaste.recipesite.recipe.RecipeRepository;
+import com.thundertaste.recipesite.review.Review;
 import com.thundertaste.recipesite.user.User;
 import com.thundertaste.recipesite.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
+import com.thundertaste.recipesite.review.ReviewRepository;
+import com.thundertaste.recipesite.rating.RatingRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,6 +29,11 @@ public class DatabaseLoader implements ApplicationRunner {
     // Repository for Recipe entities
     private final RecipeRepository recipes;
 
+    // Repository for Review entities
+    private final ReviewRepository reviewRepository;
+
+    // Repository for Rating entities
+    private final RatingRepository ratingRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -33,9 +41,12 @@ public class DatabaseLoader implements ApplicationRunner {
     // The @Autowired annotation tells Spring to automatically inject the required repositories
     // (UserRepository and RecipeRepository) into this DatabaseLoader class when it's instantiated.
     @Autowired
-    public DatabaseLoader(UserRepository users, RecipeRepository recipes) {
+    public DatabaseLoader(UserRepository users, RecipeRepository recipes,
+                          ReviewRepository reviewRepository, RatingRepository ratingRepository) {
         this.users = users;
         this.recipes = recipes;
+        this.reviewRepository = reviewRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     // The run method is a callback method that's executed after the application context is loaded.
@@ -103,7 +114,7 @@ public class DatabaseLoader implements ApplicationRunner {
                     "Description for recipe " + i,
                     ingredients,
                     steps,  // Passing the list of steps
-                    "images/recipePhotos/"+imageFilename,
+                    "images/recipePhotos/"+ imageFilename,
                     null,  // Assuming category can be null for simplicity
                     "30 minutes",
                     "1 hour",
@@ -117,5 +128,29 @@ public class DatabaseLoader implements ApplicationRunner {
         // Using the RecipeRepository, we save all the sample recipes into the database.
         recipes.saveAll(sampleRecipes);
 
+        // create and save reviews and ratings
+        createSampleReviewsAndRatings(sampleUsers, sampleRecipes);
+
+
+
     }
+
+    // After you've saved users and recipes, add sample reviews and ratings
+    private void createSampleReviewsAndRatings(List<User> sampleUsers, List<Recipe> sampleRecipes) {
+        for (int i = 0; i < sampleRecipes.size(); i++) {
+            User author = sampleUsers.get(i % sampleUsers.size());
+            Recipe recipe = sampleRecipes.get(i);
+
+            // Create a new Rating
+            Rating rating = new Rating(author.getUserID() , recipe.getId(), i % 5 + 1, new Date()); // Score between 1 to 5
+            ratingRepository.save(rating);
+
+            // Create a new Review
+            Review review = new Review(author.getUserID(), recipe.getId(), "This is a sample review for recipe " + i, new Date(), rating);
+            reviewRepository.save(review);
+        }
+    }
+
+
+
 }

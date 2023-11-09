@@ -1,5 +1,7 @@
 package com.thundertaste.recipesite.recipe;
 
+import com.thundertaste.recipesite.rating.Rating;
+import com.thundertaste.recipesite.review.Review;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +17,6 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     // Query method to find recipes by user ID
     List<Recipe> findByAuthorUserID(Long userId);
+
 
 }

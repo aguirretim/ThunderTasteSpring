@@ -13,6 +13,39 @@ public class Review extends BaseEntity {
     @Column(nullable = false)
     private Long userID;
 
+    @Column(nullable = false)
+    private Long recipeID;
+
+    @Column(nullable = false, length = 2000)
+    private String text;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date datePosted;
+
+    @ManyToOne
+    @JoinColumn(name = "rating_id", referencedColumnName = "ratingid")
+    private Rating rating;
+
+    protected Review(){
+        super();
+    }
+
+    // Static factory method to create a new Review instance
+    public static Review createReview() {
+        return new Review();
+    }
+
+    public Review(Long userID, Long recipeID, String text, Date datePosted, Rating rating) {
+        this.userID = userID;
+        this.recipeID = recipeID;
+        this.text = text;
+        this.datePosted = datePosted;
+        this.rating = rating;
+    }
+
+    // Getter, Setter methods, and other required methods.
+
     public Long getUserID() {
         return userID;
     }
@@ -52,24 +85,5 @@ public class Review extends BaseEntity {
     public void setRating(Rating rating) {
         this.rating = rating;
     }
-
-    @Column(nullable = false)
-    private Long recipeID;
-
-    @Column(nullable = false, length = 2000) // Assuming comment text max length to be 2000. Adjust as needed.
-    private String text;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date datePosted;
-
-    @ManyToOne
-    @JoinColumn(name = "rating_id", referencedColumnName = "ratingid")
-    private Rating rating;
-
-    protected Review(){
-        super();
-    }
-    // Getter, Setter methods, and other required methods.
 
 }
