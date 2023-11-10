@@ -87,7 +87,7 @@
             <div th:if="${recipes.isEmpty()}" class="no-recipes-message">
                 <p>No recipes found.</p>
             </div>
-        <article class="recipe-card col-md-4" th:each="recipe : ${recipes}" th:unless="${recipes.isEmpty()}" data-url="#">
+            <article class="recipe-card col-md-4" th:each="recipe : ${recipes}" th:unless="${recipes.isEmpty()}" th:data-url="@{/recipe/{id}(id=${recipe.id})}">
             <div class="recipe-image-wrapper">
                 <img alt="Default Alt Text" src="../static/images/recipePhotos/v3_31.png"
                      th:src="@{/{filename}(filename=${recipe.image})}"

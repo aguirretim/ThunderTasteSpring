@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     recipeCards.forEach(card => {
         card.addEventListener('click', function (event) {
             if (!event.target.closest('.Fave-icon')) {
-                window.location = 'recipe-view.html';
+                window.location.href = this.getAttribute('data-url');
             }
         });
     });
