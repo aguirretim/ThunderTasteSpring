@@ -42,10 +42,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 
 
 @Controller
@@ -72,6 +69,27 @@ public class RecipeController {
 
     @Autowired
     private RatingService ratingService;
+
+
+    @GetMapping({"/", "/home", "/index"})
+    public String displayHome(Model model) {
+        List<Recipe> recipes = recipeService.getNewestRecipes();
+        Map<Long, Double> averageRatings = new HashMap<>();
+
+        for (Recipe recipe : recipes) {
+            List<Review> reviews = reviewService.findReviewsByRecipeId(recipe.getId());
+            double averageRating = calculateAverageRating(reviews);
+            averageRatings.put(recipe.getId(), averageRating);
+        }
+
+        Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
+
+        model.addAttribute("recipes", recipes);
+        model.addAttribute("averageRatings", averageRatings);
+        model.addAttribute("starData", starData);
+        return "index";
+    }
+
 
     // List all recipes
     @GetMapping("/recipes")
@@ -142,16 +160,19 @@ public class RecipeController {
 
         // Fetch the reviews and their associated authors
         List<ReviewTransferObject> reviewDTOs = reviewService.getReviewsWithAuthors(id);
-
+        Map<Long, Double> averageRatings = new HashMap<>();
 
         model.addAttribute("recipe", recipe);
         // Fetch the reviews and ratings for this recipe
         List<Review> reviews = reviewService.findReviewsByRecipeId(id);
         List<Rating> ratings = ratingService.findRatingsByRecipeId(id); // If ratings are separate
         double averageRating = calculateAverageRating(reviews); // Method to calculate average rating from the list of reviews
+        averageRatings.put(recipe.getId(), averageRating);
+        Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
 
         model.addAttribute("reviewDTOs", reviewDTOs);
         model.addAttribute("averageRating", averageRating);
+        model.addAttribute("starData", starData);
         model.addAttribute("notFound", false);
 
         return "recipe-view";
@@ -189,6 +210,9 @@ public class RecipeController {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imagePath = imageService.saveImage(imageFile); // The method to save the image and return the path
                 recipe.setImage(imagePath); // Set the image path of the recipe
+            }else {
+                // Set default image path if no image is uploaded
+                recipe.setImage("images/recipePhotos/noRecipeImage.png");
             }
 
             // Save the recipe and get the saved entity back to capture the generated ID
@@ -247,12 +271,33 @@ public class RecipeController {
         if (query != null && !query.isEmpty()) {
             recipes = recipeService.searchRecipes(query);
         } else {
-            // Handle the case when query is not provided
-            // Example: Return all recipes or a default set
-            recipes = recipeService.getAllRecipes(); // Ensure you have a method to handle this
+            recipes = recipeService.getAllRecipes();
         }
+
+        Map<Long, Double> averageRatings = new HashMap<>();
+
+        for (Recipe recipe : recipes) {
+            List<Review> reviews = reviewService.findReviewsByRecipeId(recipe.getId());
+            // Filter out reviews with null ratings
+            reviews.removeIf(review -> review.getRating() == null);
+            double averageRating = calculateAverageRating(reviews);
+            averageRatings.put(recipe.getId(), averageRating);
+            // Log each recipe's average rating
+            System.out.println("Recipe ID: " + recipe.getId() + ", Average Rating: " + averageRating);
+        }
+        Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
+
+        // Log the star data
+        System.out.println("Star Data: " + starData);
+
         model.addAttribute("recipes", recipes);
-        return "recipe-search"; // Name of the Thymeleaf template
+        model.addAttribute("averageRatings", averageRatings);
+        model.addAttribute("starData", starData);
+
+        System.out.println("Average Ratings Map: " + averageRatings);
+        System.out.println("Star Data Map: " + starData);
+
+        return "recipe-search"; // Replace with your actual view name
     }
 
     private void saveFile(MultipartFile file) throws IOException {
@@ -287,7 +332,18 @@ public class RecipeController {
 
         // Fetch the recipes using the userID
         List<Recipe> personalRecipes = recipeService.findRecipesByUserId(userId);
+        Map<Long, Double> averageRatings = new HashMap<>();
+        for (Recipe recipe : personalRecipes) {
+            List<Review> reviews = reviewService.findReviewsByRecipeId(recipe.getId());
+            double averageRating = calculateAverageRating(reviews);
+            averageRatings.put(recipe.getId(), averageRating);
+        }
+
+        Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
+
+
         model.addAttribute("recipes", personalRecipes);
+        model.addAttribute("starData", starData);
         return "my-recipes"; // Name of your Thymeleaf template
     }
 
@@ -362,13 +418,36 @@ public class RecipeController {
     // Utility method to calculate average rating, assuming Review has a method getRating() which returns Rating object
     private double calculateAverageRating(List<Review> reviews) {
         if (reviews.isEmpty()) {
-            return 0;
+            return 0; // No reviews
         }
         double sum = 0.0;
+        int count = 0;
         for (Review review : reviews) {
-            sum += review.getRating().getScore(); // Assuming getScore() gets the score from Rating object
+            if (review.getRating() != null) {
+                sum += review.getRating().getScore();
+                count++;
+            }
         }
-        return sum / reviews.size();
+        return count == 0 ? -1 : sum / count; // -1 if reviews exist but no ratings
+
     }
+
+    private Map<Long, List<Boolean>> prepareStarData(Map<Long, Double> averageRatings) {
+        Map<Long, List<Boolean>> starData = new HashMap<>();
+        for (Map.Entry<Long, Double> entry : averageRatings.entrySet()) {
+            Long recipeId = entry.getKey();
+            Double rating = entry.getValue();
+            List<Boolean> stars = new ArrayList<>();
+            for (int i = 1; i <= 5; i++) {
+                stars.add(i <= rating);
+            }
+            starData.put(recipeId, stars);
+
+            // Log each recipe's star data
+            System.out.println("Recipe ID: " + recipeId + ", Stars: " + stars);
+        }
+        return starData;
+    }
+
 
 }

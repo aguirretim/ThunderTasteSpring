@@ -59,7 +59,7 @@ public class DatabaseLoader implements ApplicationRunner {
                 new User("johndoe",
                         "johndoe@example.com",
                         passwordEncoder.encode("a"),
-                        "profileImage1",
+                        "\\images\\profileImages\\johndoe.png",
                         new Date(), "Bio for John Doe"),
                 new User("janedoe",
                         "janedoe@example.com",

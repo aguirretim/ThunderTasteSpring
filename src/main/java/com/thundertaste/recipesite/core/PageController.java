@@ -24,21 +24,6 @@ public class PageController {
     @Autowired
     private RecipeService recipeService;
 
-    @GetMapping({"/", "/home"})
-    public String displayHome(Model model) {
-        List<Recipe> recipes = recipeService.getNewestRecipes();
-        model.addAttribute("recipes", recipes);
-        return "index";
-    }
-    // Add a method to handle the home page request and list recipes
-    @GetMapping("/index")
-    public String homePage(Model model) {
-        List<Recipe> recipes = recipeService.getNewestRecipes();
-        model.addAttribute("recipes", recipes);
-        return "index"; // name of your template
-    }
-
-
 
 
 

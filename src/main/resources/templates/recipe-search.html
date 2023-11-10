@@ -77,7 +77,7 @@
 <section class="recent-recipes">
 
     <div th:each="recipe : ${recipes}">
-        <article class="recipe-card" th:attr="data-recipe-id=${recipe.id}">
+         <article class="recipe-card" th:attr="data-recipe-id=${recipe.id}">
 
             <div class="recipe-image-wrapper">
                 <img th:src="@{/{filename}(filename=${recipe.image})}" th:alt="${recipe.title}">
@@ -86,15 +86,17 @@
                     <use xlink:href="images/icons/icons.svg#fave-icon"></use>
                 </svg>
             </div>
+
+
+
+            <!-- Star Ratings -->
             <div class="star-ratings">
-                <div th:each="star,iterStat : ${#numbers.sequence(1,5)}">
-                    <!--th:if="${recipe.rating >= iterStat.count}"-->
-                    <svg fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-filled-icon"></use>
+                <div th:each="filled : ${starData[recipe.id]}">
+                    <svg th:if="${filled}" fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-filled-icon" th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
                     </svg>
-                    <!--th:unless="${recipe.rating >= iterStat.count}"-->
-                    <svg  height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
-                        <use xlink:href="images/icons/icons.svg#star-empty-icon"></use>
+                    <svg th:unless="${filled}" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                        <use xlink:href="../static/images/icons/icons.svg#star-empty-icon" th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
                     </svg>
                 </div>
             </div>

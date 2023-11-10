@@ -267,6 +267,18 @@ nav ul li a:hover {
     box-shadow: 0 4px 12px #FFC107; /* Adds a subtle shadow on hover */
 }
 
+.star-ratings {
+    display: flex; /* Makes the container use flexbox layout */
+    align-items: center; /* Aligns the stars vertically in the center */
+    justify-content: flex-start; /* Aligns the stars to the start of the container */
+    gap: 4px; /* Adds a small gap between each star, adjust as needed */
+}
+
+.star-ratings svg {
+    display: inline-block; /* Ensures SVGs are inline and respect the flex layout */
+    vertical-align: middle; /* Aligns SVGs vertically in the middle */
+}
+
 /***********************************
  Mobile Responsive Design
 ************************************/

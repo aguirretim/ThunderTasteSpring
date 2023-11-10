@@ -73,17 +73,16 @@
 
 <main class="container mt-5 position-relative">
     <h2 class="text-left" th:text="${recipe.getTitle()}">Stormy Sirloin Recipe</h2>
+    <!-- Star Ratings -->
     <div class="star-ratings">
-        <th:block th:each="star : ${#numbers.sequence(1, 5)}">
-            <!--th:classappend="${star <= recipe.rating} ? 'rated' : 'unrated'" -->
-            <svg height="24" viewBox="0 0 27 24" width="27"
-                 xmlns="http://www.w3.org/2000/svg">
-                <use xlink:href="../static/images/icons/icons.svg#star-empty-icon"
-                     th:href="@{/images/icons/icons.svg#star-empty}"></use>
-                <!-- Insert additional SVG code here if needed -->
-                <!--th:xlink:href="@{images/icons/icons.svg#star-(star <= recipe .rating) ? 'full' : 'empty'}-icon"-->
+        <div th:each="filled : ${starData[recipe.id]}">
+            <svg th:if="${filled}" fill="none" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="../static/images/icons/icons.svg#star-filled-icon" th:href="@{/images/icons/icons.svg#star-filled-icon}"></use>
             </svg>
-        </th:block>
+            <svg th:unless="${filled}" height="24" viewBox="0 0 27 24" width="27" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="../static/images/icons/icons.svg#star-empty-icon" th:href="@{/images/icons/icons.svg#star-empty-icon}"></use>
+            </svg>
+        </div>
     </div>
     <svg class="Fave-icon" height="43" viewbox="0 0 43 43" width="43" xmlns="http://www.w3.org/2000/svg">
         <use xlink:href="../static/images/icons/icons.svg#fave-icon"></use>
