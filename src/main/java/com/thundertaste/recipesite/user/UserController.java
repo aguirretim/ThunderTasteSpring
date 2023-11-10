@@ -137,16 +137,17 @@ public class UserController {
     @GetMapping("/images/profileImages/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
-        Path uploadDirectory = Paths.get("/images/profileImages/");
-        Path file = uploadDirectory.resolve(filename);
-        Resource resource = new UrlResource(file.toUri());
+        Path path = Paths.get("src/main/resources/static/images/profileImages/" + filename);
+        Resource resource = new UrlResource(path.toUri());
         if (resource.exists() || resource.isReadable()) {
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
         } else {
-            throw new RuntimeException("Could not read the file!");
+            throw new RuntimeException("Could not read the file: " + filename);
         }
     }
+
 
 
 
