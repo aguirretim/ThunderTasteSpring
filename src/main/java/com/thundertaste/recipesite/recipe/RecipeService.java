@@ -25,7 +25,7 @@ public class RecipeService {
     }
 
     public List<Recipe> searchRecipes(String query) {
-        // Implement search logic (could be a simple findAllByNameContaining or a more complex query)
+        // search logic
         return recipeRepository.findByTitleContaining(query);
     }
 

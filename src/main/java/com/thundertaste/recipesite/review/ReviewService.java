@@ -24,8 +24,6 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    // Other methods...
-
     public List<Review> findReviewsByRecipeId(Long recipeID) {
         return reviewRepository.findByRecipeID(recipeID);
     }
@@ -39,7 +37,6 @@ public class ReviewService {
             String username = author != null ? author.getUsername() : "Unknown";
             int score = review.getRating().getScore();
             ReviewTransferObject dto = new ReviewTransferObject(review.getText(), review.getDatePosted(), username,score);
-            // ... set other properties like rating
             reviewDTOs.add(dto);
         }
 

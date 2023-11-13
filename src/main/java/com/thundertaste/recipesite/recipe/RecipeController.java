@@ -408,15 +408,16 @@ public class RecipeController {
         // Assuming UserTransferObject has a getId() method to fetch the User's ID
         Long userId = user.getUserID();
 
-        review.setUserID(userId); // Set the user ID for the review
-        review.setRecipeID(recipeId); // Set the recipe ID for the review
-        review.setDatePosted(new Date()); // Set the current date for the review
+        review.setUserID(userId);
+        review.setRecipeID(recipeId);
+        review.setDatePosted(new Date());
         review.setRating(rating);
 
 
-        rating.setUserID(userId); // Set the user ID for the rating
-        rating.setRecipeID(recipeId); // The score should already be set in the 'rating' object if your form is set up correctly
+        rating.setUserID(userId);
+        rating.setRecipeID(recipeId);
         rating.setDateGiven(new Date());
+
         ratingService.save(rating); // Save the rating
 
         reviewService.save(review); // Save the review

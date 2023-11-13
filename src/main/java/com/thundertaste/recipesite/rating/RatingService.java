@@ -1,7 +1,6 @@
 package com.thundertaste.recipesite.rating;
 
 
-import com.thundertaste.recipesite.review.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ public class RatingService {
     public Rating save(Rating rating) {
         return ratingRepository.save(rating);
     }
-
 
     public List<Rating> findRatingsByRecipeId(Long recipeId) {
         return ratingRepository.findByRecipeID(recipeId);

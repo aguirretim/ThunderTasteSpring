@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RatingRepository extends CrudRepository<Rating, Long> {
 
-    // Define a query method to find ratings by recipe ID
+    //Method to find ratings by recipe ID
     List<Rating> findByRecipeID(Long recipeID);
 
 }

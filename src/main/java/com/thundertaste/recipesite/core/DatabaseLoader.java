@@ -67,7 +67,6 @@ public class DatabaseLoader implements ApplicationRunner {
                         "profileImage2",
                         new Date(),
                         "Bio for Jane Doe")
-                // Add more sample users as needed
         );
 
         // Using the UserRepository, we save all the sample users into the database.
