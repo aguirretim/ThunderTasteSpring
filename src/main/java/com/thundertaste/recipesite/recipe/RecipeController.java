@@ -11,6 +11,7 @@ import com.thundertaste.recipesite.user.User;
 import com.thundertaste.recipesite.user.UserRepository;
 import com.thundertaste.recipesite.user.UserService;
 import com.thundertaste.recipesite.user.UserTransferObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 
 @Controller
+@Slf4j
 //@RequestMapping("/recipes")
 public class RecipeController {
     private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
@@ -267,6 +269,11 @@ public class RecipeController {
     }
 
 
+
+    @GetMapping("/recipe-search")
+    public String browseRecipes() {
+        return "recipe-search";
+    }
 
 
     @GetMapping("/search")

@@ -1,4 +1,4 @@
-package com.thundertaste.recipesite.core;
+package com.thundertaste.recipesite.security;
 
 import com.thundertaste.recipesite.user.User;
 import com.thundertaste.recipesite.user.UserRepository;

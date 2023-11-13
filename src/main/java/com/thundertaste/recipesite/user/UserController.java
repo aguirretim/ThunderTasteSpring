@@ -36,6 +36,17 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+
+
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "Invalid username or password");
+        }
+
+        return "login";
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
