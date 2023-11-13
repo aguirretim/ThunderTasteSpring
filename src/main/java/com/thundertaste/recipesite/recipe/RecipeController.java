@@ -43,11 +43,15 @@ import java.time.LocalDateTime;
 
 import java.time.ZoneId;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Controller
 //@RequestMapping("/recipes")
 public class RecipeController {
+    private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
+
 
     @Autowired
     private RecipeRepository recipeRepository;
@@ -233,8 +237,8 @@ public class RecipeController {
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) throws MalformedURLException {
         Path uploadDirectory = Paths.get("src/main/resources/static/images/recipePhotos"); // Make sure this path is correct.
-        System.out.println("Absolute path: " + uploadDirectory.toAbsolutePath().toString());
-        System.out.println("Requested filename: " + filename);
+        logger.info("Absolute path: " + uploadDirectory.toAbsolutePath().toString());
+        logger.info("Requested filename: " + filename);
         Path file = uploadDirectory.resolve(filename);
         if (!Files.exists(file)) {
             throw new RuntimeException("File not found: " + file);
@@ -243,10 +247,10 @@ public class RecipeController {
             throw new RuntimeException("File not readable: " + file);
         }
 
-        System.out.println("Current directory: " + Paths.get("").toAbsolutePath().toString());
+        logger.info("Current directory: " + Paths.get("").toAbsolutePath().toString());
 
         URI uri = file.toUri();
-        System.out.println("File URI: " + uri);
+        logger.info("File URI: " + uri);
 
 
         Resource resource = new UrlResource(file.toUri());
@@ -283,19 +287,19 @@ public class RecipeController {
             double averageRating = calculateAverageRating(reviews);
             averageRatings.put(recipe.getId(), averageRating);
             // Log each recipe's average rating
-            System.out.println("Recipe ID: " + recipe.getId() + ", Average Rating: " + averageRating);
+            logger.info("Recipe ID: " + recipe.getId() + ", Average Rating: " + averageRating);
         }
         Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
 
         // Log the star data
-        System.out.println("Star Data: " + starData);
+        logger.info("Star Data: " + starData);
 
         model.addAttribute("recipes", recipes);
         model.addAttribute("averageRatings", averageRatings);
         model.addAttribute("starData", starData);
 
-        System.out.println("Average Ratings Map: " + averageRatings);
-        System.out.println("Star Data Map: " + starData);
+        logger.info("Average Ratings Map: " + averageRatings);
+        logger.info("Star Data Map: " + starData);
 
         return "recipe-search"; // Replace with your actual view name
     }
@@ -380,7 +384,7 @@ public class RecipeController {
                                Model model,
                                Principal principal) {
         // logging to check the value of 'star'
-        System.out.println("Star rating received: " + rating.getScore());
+        logger.info("Star rating received: " + rating.getScore());
 
         model.addAttribute("review", Review.createReview());
         model.addAttribute("rating", Rating.createRating());
@@ -444,7 +448,7 @@ public class RecipeController {
             starData.put(recipeId, stars);
 
             // Log each recipe's star data
-            System.out.println("Recipe ID: " + recipeId + ", Stars: " + stars);
+            logger.info("Recipe ID: " + recipeId + ", Stars: " + stars);
         }
         return starData;
     }
