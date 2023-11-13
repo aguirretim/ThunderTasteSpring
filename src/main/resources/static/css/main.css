@@ -279,6 +279,20 @@ nav ul li a:hover {
     vertical-align: middle; /* Aligns SVGs vertically in the middle */
 }
 
+
+.Fave-icon svg .fave-icon-path {
+    transition: fill 0.2s ease-in-out;
+    fill: black; /* Default fill color */
+}
+
+.Fave-icon:hover svg .fave-icon-path {
+    fill: #FFC107; /* Change to the color you want on hover */
+}
+
+.Fave-icon.favorite-active svg .fave-icon-path {
+    fill: #FFC107; /* Change to the color you want when active/filled */
+}
+
 /***********************************
  Mobile Responsive Design
 ************************************/

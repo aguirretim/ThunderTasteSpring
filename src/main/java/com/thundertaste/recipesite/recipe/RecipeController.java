@@ -12,6 +12,8 @@ import com.thundertaste.recipesite.user.UserRepository;
 import com.thundertaste.recipesite.user.UserService;
 import com.thundertaste.recipesite.user.UserTransferObject;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -19,16 +21,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -40,12 +37,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.time.LocalDateTime;
-
-import java.time.ZoneId;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @Controller
@@ -78,8 +70,13 @@ public class RecipeController {
 
 
     @GetMapping({"/", "/home", "/index"})
-    public String displayHome(Model model) {
+    public String displayHome(Model model,Principal principal) {
         List<Recipe> recipes = recipeService.getNewestRecipes();
+        Set<Long> favoritedRecipeIds = new HashSet<>(); // Assuming this method exists
+        if (principal != null) {
+            favoritedRecipeIds = recipeService.getFavoritedRecipeIdsByUser(principal.getName());
+        }
+
         Map<Long, Double> averageRatings = new HashMap<>();
 
         for (Recipe recipe : recipes) {
@@ -90,10 +87,12 @@ public class RecipeController {
 
         Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
 
+        model.addAttribute("favoritedRecipeIds", favoritedRecipeIds);
         model.addAttribute("recipes", recipes);
         model.addAttribute("averageRatings", averageRatings);
         model.addAttribute("starData", starData);
         return "index";
+
     }
 
 
@@ -151,6 +150,7 @@ public class RecipeController {
             return "error/recipeNotFound";
         }
     }
+
     @GetMapping("recipe/{id}")
     public String getRecipe(Model model, @PathVariable Long id) {
         Optional<Recipe> recipeOptional = recipeService.findById(id);
@@ -216,7 +216,7 @@ public class RecipeController {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imagePath = imageService.saveImage(imageFile); // The method to save the image and return the path
                 recipe.setImage(imagePath); // Set the image path of the recipe
-            }else {
+            } else {
                 // Set default image path if no image is uploaded
                 recipe.setImage("images/recipePhotos/noRecipeImage.png");
             }
@@ -267,7 +267,6 @@ public class RecipeController {
             throw new RuntimeException("Could not read the file!");
         }
     }
-
 
 
     @GetMapping("/recipe-search")
@@ -359,7 +358,6 @@ public class RecipeController {
     }
 
 
-
     @GetMapping("/recipe/{recipeId}/create-a-review")
     public String reviewPage(@PathVariable Long recipeId, Model model) {
         Optional<Recipe> optionalRecipe = recipeService.findById(recipeId);
@@ -424,6 +422,14 @@ public class RecipeController {
 
 
         return "redirect:/recipe/" + recipeId;
+    }
+
+
+    @PostMapping("/toggle-favorite/{recipeId}")
+    @ResponseBody
+    public Map<String, Boolean> toggleFavorite(@PathVariable Long recipeId, Principal principal) {
+        boolean isFavorite = recipeService.toggleFavorite(recipeId, principal.getName());
+        return Collections.singletonMap("isFavorite", isFavorite);
     }
 
 

@@ -61,6 +61,7 @@ public class CustomAuthConfig {
                                 new AntPathRequestMatcher("/recipe-view"),
                                 new AntPathRequestMatcher("/recipe/*"),
                                 new AntPathRequestMatcher("/recipes/*"),
+                                new AntPathRequestMatcher("/toggle-favorite/*"),
                                 new AntPathRequestMatcher("/signup"),
                                 new AntPathRequestMatcher("/home")
                         ).permitAll()

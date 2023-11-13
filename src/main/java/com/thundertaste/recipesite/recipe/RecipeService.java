@@ -1,16 +1,21 @@
 package com.thundertaste.recipesite.recipe;
 
+import com.thundertaste.recipesite.favorite.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private FavoriteService favoriteService;
 
     public List<Recipe> getNewestRecipes() {
         return recipeRepository.findTop6ByOrderByIdDesc();
@@ -39,6 +44,15 @@ public class RecipeService {
         return recipeRepository.findByAuthorUserID(userId);
     }
 
+    public boolean toggleFavorite(Long recipeId, String username) {
+        // Logic to add or remove recipe from user's favorites
+        // Return true if it's now a favorite, false otherwise
+        return favoriteService.toggleFavorite(recipeId, username);
+    }
 
+
+    public Set<Long> getFavoritedRecipeIdsByUser(String username) {
+        return favoriteService.getFavoriteRecipeIdsByUser(username);
+    }
 
 }
