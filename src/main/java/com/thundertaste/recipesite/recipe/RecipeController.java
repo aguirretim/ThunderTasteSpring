@@ -270,19 +270,34 @@ public class RecipeController {
 
 
     @GetMapping("/recipe-search")
-    public String browseRecipes() {
+    public String browseRecipes(Principal principal, Model model) {
+
+
+        Set<Long> favoritedRecipeIds = new HashSet<>(); // Assuming this method exists
+        if (principal != null) {
+            favoritedRecipeIds = recipeService.getFavoritedRecipeIdsByUser(principal.getName());
+        }
+        model.addAttribute("favoritedRecipeIds", favoritedRecipeIds);
+
+
         return "recipe-search";
     }
 
 
     @GetMapping("/search")
-    public String search(@RequestParam(value = "query", required = false) String query, Model model) {
+    public String search(@RequestParam(value = "query", required = false) String query,Principal principal, Model model) {
         List<Recipe> recipes;
         if (query != null && !query.isEmpty()) {
             recipes = recipeService.searchRecipes(query);
         } else {
             recipes = recipeService.getAllRecipes();
         }
+
+        Set<Long> favoritedRecipeIds = new HashSet<>(); // Assuming this method exists
+        if (principal != null) {
+            favoritedRecipeIds = recipeService.getFavoritedRecipeIdsByUser(principal.getName());
+        }
+
 
         Map<Long, Double> averageRatings = new HashMap<>();
 
@@ -303,6 +318,8 @@ public class RecipeController {
         model.addAttribute("recipes", recipes);
         model.addAttribute("averageRatings", averageRatings);
         model.addAttribute("starData", starData);
+        model.addAttribute("favoritedRecipeIds", favoritedRecipeIds);
+
 
         logger.info("Average Ratings Map: " + averageRatings);
         logger.info("Star Data Map: " + starData);
