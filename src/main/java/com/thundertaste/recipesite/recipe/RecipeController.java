@@ -38,6 +38,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 @Controller
@@ -327,6 +328,9 @@ public class RecipeController {
         return "recipe-search"; // Replace with your actual view name
     }
 
+
+
+
     private void saveFile(MultipartFile file) throws IOException {
         String uploadDir = "/path/to/uploads";
         Path uploadPath = Paths.get(uploadDir);
@@ -346,34 +350,54 @@ public class RecipeController {
 
     @GetMapping("/my-recipes")
     public String myRecipes(Model model, Principal principal) {
-        // Fetch the User DTO using the username
-        UserTransferObject userDto = userService.findUserByUsername(principal.getName());
-        if (userDto == null) {
-            // Handle the case where the user DTO is not found
-            // Redirect to login
+        if (principal == null) {
             return "redirect:/login";
         }
 
-        // Ensure your DTO has a method to get the userID
-        Long userId = userDto.getUserID(); // replace getUserID with your actual method to get ID from DTO
+        String username = principal.getName();
+        UserTransferObject userDto = userService.findUserByUsername(username);
 
-        // Fetch the recipes using the userID
-        List<Recipe> personalRecipes = recipeService.findRecipesByUserId(userId);
-        Map<Long, Double> averageRatings = new HashMap<>();
-        for (Recipe recipe : personalRecipes) {
-            List<Review> reviews = reviewService.findReviewsByRecipeId(recipe.getId());
-            double averageRating = calculateAverageRating(reviews);
-            averageRatings.put(recipe.getId(), averageRating);
+        if (userDto == null) {
+            return "redirect:/login";
         }
 
-        Map<Long, List<Boolean>> starData = prepareStarData(averageRatings);
+        Long userId = userDto.getUserID();
 
+        // Fetch personal recipes
+        List<Recipe> personalRecipes = recipeService.findRecipesByUserId(userId);
 
-        model.addAttribute("recipes", personalRecipes);
+        // Fetch favorited recipes
+        List<Recipe> favoritedRecipes = recipeService.getFavoritedRecipes(username);
+
+        // Prepare ratings and star data for both lists
+        Map<Long, Double> averageRatings = new HashMap<>();
+        Map<Long, List<Boolean>> starData = new HashMap<>();
+
+        // Combine and process both lists of recipes for rating and star data
+        Stream.of(personalRecipes, favoritedRecipes)
+                .flatMap(Collection::stream)
+                .distinct()  // Remove duplicates if any recipe is both personal and favorited
+                .forEach(recipe -> {
+                    List<Review> reviews = reviewService.findReviewsByRecipeId(recipe.getId());
+                    double averageRating = calculateAverageRating(reviews);
+                    averageRatings.put(recipe.getId(), averageRating);
+                    starData.put(recipe.getId(), prepareStarDataForRecipe(averageRating));
+                });
+
+        model.addAttribute("personalRecipes", personalRecipes);
+        model.addAttribute("favoritedRecipes", favoritedRecipes);
+        model.addAttribute("averageRatings", averageRatings);
         model.addAttribute("starData", starData);
-        return "my-recipes"; // Name of your Thymeleaf template
-    }
 
+        return "my-recipes";
+    }
+    private List<Boolean> prepareStarDataForRecipe(double averageRating) {
+        List<Boolean> stars = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            stars.add(i <= averageRating);
+        }
+        return stars;
+    }
 
     @GetMapping("/recipe/{recipeId}/create-a-review")
     public String reviewPage(@PathVariable Long recipeId, Model model) {

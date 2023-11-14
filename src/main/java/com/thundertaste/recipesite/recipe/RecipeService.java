@@ -55,4 +55,12 @@ public class RecipeService {
         return favoriteService.getFavoriteRecipeIdsByUser(username);
     }
 
+
+    public List<Recipe> getFavoritedRecipes(String username) {
+        Set<Long> favoritedRecipeIds = favoriteService.getFavoriteRecipeIdsByUser(username);
+        return (List<Recipe>) recipeRepository.findAllById(favoritedRecipeIds);
+    }
+
+
+
 }
