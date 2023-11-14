@@ -169,12 +169,17 @@ public class Recipe extends BaseEntity {
 
     private static final Logger LOGGER = Logger.getLogger(Recipe.class.getName());
 
-    public int getTotalTimeInMinutes() {
+    public String getTotalTime() {
 
-        int total = 0;
-        total += convertTimeToMinutes(this.prepTime);
-        total += convertTimeToMinutes(this.cookTime);
-        return total;
+        int totalMinutes = convertTimeToMinutes(this.prepTime) + convertTimeToMinutes(this.cookTime);
+
+        if (totalMinutes >= 60) {
+            int hours = totalMinutes / 60;
+            int minutes = totalMinutes % 60;
+            return hours + " hours " + minutes + " min";
+        } else {
+            return totalMinutes + " min";
+        }
     }
 
     private int convertTimeToMinutes(String timeString) {

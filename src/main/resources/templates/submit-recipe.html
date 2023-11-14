@@ -196,10 +196,14 @@
                 <label for="servings">Servings</label>
                 <input type="number" id="servings" th:field="*{servingSize}" class="form-control" min="1">
             </div>
+
+            <!-- Hidden inputs for time values -->
+            <input type="hidden" id="hiddenPrepTime" th:field="*{prepTime}" />
+            <input type="hidden" id="hiddenCookTime" th:field="*{cookTime}" />
             <div class="form-group col-md-4 d-flex align-items-center">
                 <div class="me-2">
                     <label for="prepTimeNumber">Prep Time</label>
-                    <input type="number" id="prepTimeNumber" th:field="*{prepTime}" class="form-control" min="1" placeholder="Time">
+                    <input type="number" id="prepTimeNumber" class="form-control" min="1" placeholder="Time">
                 </div>
                 <div class="ms-2">
                     <label for="prepTimeUnit">&nbsp;</label>
@@ -213,7 +217,7 @@
             <div class="form-group col-md-4 d-flex align-items-center">
                 <div class="me-2">
                     <label for="cookTimeNumber">Cook Time (Optional)</label>
-                    <input type="number" id="cookTimeNumber" th:field="*{cookTime}" class="form-control" min="0" placeholder="Time">
+                    <input type="number" id="cookTimeNumber" class="form-control" min="0" placeholder="Time">
                 </div>
                 <div class="ms-2">
                     <label for="cookTimeUnit">&nbsp;</label>

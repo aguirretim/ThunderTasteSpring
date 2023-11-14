@@ -171,32 +171,28 @@ function setupFormSubmissionHandler() {
     document.querySelector('form').addEventListener('submit', function (event) {
         let isFormValid = validateRecipeTitle() && validateDescription() && validateAllIngredients() && validateAllSteps();
 
-        if (isFormValid) {
-            // Perform submission logic here
-
-            let ingredients = [];
-
-            // Get values from static inputs
-            document.querySelectorAll('#ingredientInputContainer .input-wrapper input').forEach(function(input) {
-                ingredients.push(input.value);
-            });
-
-            const formData = new FormData(this); // 'this' refers to the form element
-
-            for (let [key, value] of formData.entries()) {
-                console.log(key, value);
-            }
-        }
-
         if (!isFormValid) {
-            event.preventDefault(); // Prevent form submission only if the form is invalid
-            console.log(key, value);
-            // You may want to display error messages or logging here
-        } else {
-            // If the form is valid, do nothing here. Thymeleaf will handle the submission.
-            // Note: You do not need to manually gather the form data for Thymeleaf submission
-            console.log(key, value);
+            console.log('Form is invalid');
+            return; // Stop the form submission if validation fails
         }
+
+        if (isFormValid) {
+            // Get values from number inputs and unit selections
+            const prepTimeNumber = document.getElementById('prepTimeNumber').value;
+            const prepTimeUnit = document.getElementById('prepTimeUnit').value;
+            const cookTimeNumber = document.getElementById('cookTimeNumber').value;
+            const cookTimeUnit = document.getElementById('cookTimeUnit').value;
+
+            // Update hidden fields
+            document.getElementById('hiddenPrepTime').value = prepTimeNumber + " " + prepTimeUnit;
+            document.getElementById('hiddenCookTime').value = cookTimeNumber + " " + cookTimeUnit;
+
+
+        } else {
+            // If the form is invalid, prevent it from submitting
+            event.preventDefault();
+        }
+
 
     });
 }
