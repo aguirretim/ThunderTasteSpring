@@ -24,13 +24,14 @@ function setupInputValidationHandlers() {
 }
 // Sets up handlers for adding ingredients and steps to the recipe.
 function setupIngredientStepHandlers() {
-    const ingredientsGroup = document.getElementById('ingredients-group');
+    const ingredientsGroup = document.getElementById('ingredientInputContainer');
     const stepsGroup = document.getElementById('steps-group');
 
     // Add button click event listeners to add new ingredient/step inputs.
 
     document.querySelector('.btn-add-ingredient').addEventListener('click', function () {
         addIngredientInput(ingredientsGroup);
+
     });
 
     document.querySelector('.btn-add-step').addEventListener('click', function () {
@@ -43,12 +44,13 @@ function setupIngredientStepHandlers() {
 
 // Functions for adding new ingredient and step inputs.
 function addIngredientInput(parentGroup) {
-    const inputCount = parentGroup.querySelectorAll('.input-wrapper').length;
+    const inputCount = parentGroup.getElementsByClassName('input-wrapper').length;
+
     const newDiv = document.createElement("div");
     newDiv.className = "input-wrapper";
     newDiv.innerHTML = `
         <label for="ingredients${inputCount}"></label>
-        <input id="ingredients${inputCount}" name="recipe.ingredients[${inputCount}].name" class="form-control" placeholder="Add another ingredient">
+        <input id="ingredients${inputCount}"  name="ingredients[${inputCount}]" value class="form-control" placeholder="Add another ingredient">
         <svg width="30" height="35" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="images/icons/icons.svg#circle-x-icon"></use>
         </svg>
@@ -65,19 +67,17 @@ function addIngredientInput(parentGroup) {
     initializeInputValidationListeners(); // Refresh event listeners
 }
 function addStepInput(parentGroup) {
-    const stepsGroup = document.getElementById('steps-group');
-    const existingSteps = stepsGroup.querySelectorAll('.input-wrapper').length;
-    const index = existingSteps;  // Start index after existing steps
+    const inputCount = parentGroup.getElementsByClassName('input-wrapper').length;
 
     const newDiv = document.createElement('div');
     newDiv.className = 'input-wrapper';
     newDiv.innerHTML = `
-        <textarea id="directions${index}" name="recipe.steps[${index}]" class="form-control" placeholder="e.g. Step description…"></textarea>
+        <textarea id="directions${inputCount}" name="steps[${inputCount}]" value class="form-control" placeholder="e.g. Step description…"></textarea>
         <svg onclick="removeStep(this)" width="30" height="35" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <use xlink:href="images/icons/icons.svg#circle-x-icon"></use>
         </svg>
     `;
-    stepsGroup.appendChild(newDiv);
+    parentGroup.appendChild(newDiv);
 }
 
 function removeStep(element) {

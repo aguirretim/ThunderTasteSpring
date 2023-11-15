@@ -225,6 +225,10 @@ public class RecipeController {
             // Save the recipe and get the saved entity back to capture the generated ID
             Recipe savedRecipe = recipeService.save(recipe);
 
+            System.out.println("Recipe title: " + recipe.getTitle());
+            System.out.println("Ingredients: " + recipe.getIngredients());
+            System.out.println("Steps: " + recipe.getSteps());
+
             redirectAttributes.addFlashAttribute("message", "Recipe submitted successfully!");
             return "redirect:/recipe/" + savedRecipe.getId();
 
