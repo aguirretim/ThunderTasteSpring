@@ -1,15 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelector('main').addEventListener('click', function(event) {
 
-
-
-
         const faveIcon = event.target.closest('.Fave-icon');
+        const recipeCard = event.target.closest('.recipe-card');
+
         if (faveIcon) {
-            event.stopPropagation(); // Prevent event from bubbling up
+            event.stopPropagation(); // Prevent event from bubbling up to the recipe card
             console.log('Fave icon clicked', faveIcon);
-            const recipeCard = faveIcon.closest('.recipe-card');
-            console.log('Recipe card found', recipeCard);
+
             if (recipeCard) {
                 const recipeId = recipeCard.getAttribute('data-recipe-id');
                 console.log('Recipe ID found', recipeId);
@@ -20,6 +18,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             } else {
                 console.error('Clicked favorite icon is not inside a recipe card');
+            }
+        } else if (recipeCard) {
+            const recipeId = recipeCard.getAttribute('data-recipe-id');
+            if (recipeId) {
+                navigateToRecipe(recipeId);
+            } else {
+                console.error('No recipe ID found for the clicked recipe card');
             }
         }
     });
