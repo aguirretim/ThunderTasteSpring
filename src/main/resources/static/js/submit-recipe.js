@@ -169,31 +169,40 @@ function setupTimeInputHandlers() {
 // Handles the form submission event.
 function setupFormSubmissionHandler() {
     document.querySelector('form').addEventListener('submit', function (event) {
-        let isFormValid = validateRecipeTitle() && validateDescription() && validateAllIngredients() && validateAllSteps();
+        // Validate each part of the form
+        const isTitleValid = validateRecipeTitle();
+        const isDescriptionValid = validateDescription();
+        const areIngredientsValid = validateAllIngredients();
+        const areStepsValid = validateAllSteps();
 
-        if (!isFormValid) {
+        // If any part of the form is invalid, prevent submission
+        if (!isTitleValid || !isDescriptionValid || !areIngredientsValid || !areStepsValid) {
             console.log('Form is invalid');
-            return; // Stop the form submission if validation fails
+            event.preventDefault(); // Prevent form from submitting
+            return;
         }
 
-        if (isFormValid) {
-            // Get values from number inputs and unit selections
-            const prepTimeNumber = document.getElementById('prepTimeNumber').value;
-            const prepTimeUnit = document.getElementById('prepTimeUnit').value;
-            const cookTimeNumber = document.getElementById('cookTimeNumber').value;
-            const cookTimeUnit = document.getElementById('cookTimeUnit').value;
+        // Proceed with handling prepTime and cookTime
+        const prepTimeNumber = document.getElementById('prepTimeNumber').value;
+        const prepTimeUnit = document.getElementById('prepTimeUnit').value;
+        let cookTimeNumber = document.getElementById('cookTimeNumber').value;
+        const cookTimeUnit = document.getElementById('cookTimeUnit').value;
 
-            // Update hidden fields
-            document.getElementById('hiddenPrepTime').value = prepTimeNumber + " " + prepTimeUnit;
-            document.getElementById('hiddenCookTime').value = cookTimeNumber + " " + cookTimeUnit;
-
-
-        } else {
-            // If the form is invalid, prevent it from submitting
-            event.preventDefault();
+        // Check if prepTime is provided
+        if (!prepTimeNumber || prepTimeNumber.trim() === '') {
+            alert('Preparation time is required.');
+            event.preventDefault(); // Prevent form from submitting
+            return;
         }
 
+        // Set default value for cookTime if not provided
+        if (!cookTimeNumber || cookTimeNumber.trim() === '') {
+            cookTimeNumber = '0'; // Default to 0
+        }
 
+        // Update hidden fields with formatted time values
+        document.getElementById('hiddenPrepTime').value = prepTimeNumber + " " + prepTimeUnit;
+        document.getElementById('hiddenCookTime').value = cookTimeNumber + " " + cookTimeUnit;
     });
 }
 
